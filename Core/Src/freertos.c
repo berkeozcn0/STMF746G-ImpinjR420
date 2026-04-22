@@ -1,0 +1,855 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : freertos.c
+  * @brief          : Impinj R420 LLRP minimal EPC inventory (STM32F746G)
+  *
+  * Değişiklikler (analiz raporuna göre):
+  *  1. DELETE_ROSPEC (ID=0) eklendi — yeniden bağlanmada eski ROSpec temizlenir
+  *  2. ROReportSpec eklendi — reader'a "ROSpec bitince rapor gönder" söylenir
+  *  3. ADD_ROSPEC frame 62 → 75 byte oldu (ROReportSpec + TagReportContentSelector)
+  *  4. LLRP_PARAM_ROREPORTSPEC / TAGREPORTCONTENTSELECTOR define'ları eklendi
+  *  5. parse_tag_report_data: bilinmeyen TV tipi sz==0 olduğunda güvenli çıkış
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "main.h"
+#include "lwip/sockets.h"
+#include "lwip/inet.h"
+#include "cmsis_os.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdint.h>
+
+/* -------------------------------------------------------------------------- */
+/*                                 AYARLAR                                    */
+/* -------------------------------------------------------------------------- */
+
+#define READER_IP_ADDR      "169.254.1.1"
+#define READER_PORT         5084
+
+#define RX_BUF_SIZE         4096
+#define LLRP_HEADER_LEN     10
+
+#define SOCKET_TIMEOUT_MS   10000   /* Keepalive bekleme süresi dahil yeterince büyük */
+
+/* -------------------------------------------------------------------------- */
+/*                          MESSAGE TYPE SABİTLERİ                            */
+/* -------------------------------------------------------------------------- */
+
+#define LLRP_MSG_ADD_ROSPEC                  20
+#define LLRP_MSG_ADD_ROSPEC_RESPONSE         30
+#define LLRP_MSG_DELETE_ROSPEC               21   /* YENİ: yeniden bağlanma için */
+#define LLRP_MSG_DELETE_ROSPEC_RESPONSE      31   /* YENİ */
+#define LLRP_MSG_START_ROSPEC                22
+#define LLRP_MSG_START_ROSPEC_RESPONSE       32
+#define LLRP_MSG_ENABLE_ROSPEC               24
+#define LLRP_MSG_ENABLE_ROSPEC_RESPONSE      34
+#define LLRP_MSG_RO_ACCESS_REPORT            61
+#define LLRP_MSG_KEEPALIVE                   62
+#define LLRP_MSG_KEEPALIVE_ACK               72
+#define LLRP_MSG_READER_EVENT_NOTIFICATION   63
+#define LLRP_MSG_ERROR_MESSAGE               100
+
+/* -------------------------------------------------------------------------- */
+/*                         PARAMETER TYPE SABİTLERİ                           */
+/* -------------------------------------------------------------------------- */
+
+#define LLRP_PARAM_ROSPEC                    177
+#define LLRP_PARAM_ROBOUNDARYSPEC            178
+#define LLRP_PARAM_ROSPECSTARTTRIGGER        179
+#define LLRP_PARAM_ROSPECSTOPTRIGGER         182
+#define LLRP_PARAM_AISPEC                    183
+#define LLRP_PARAM_AISPECSTOPTRIGGER         184
+#define LLRP_PARAM_INVENTORYPARAMETERSPEC    186
+#define LLRP_PARAM_ROREPORTSPEC              237   /* YENİ: rapor tetikleyicisi */
+#define LLRP_PARAM_TAGREPORTCONTENTSELECTOR  238   /* YENİ: ROReportSpec içinde zorunlu */
+#define LLRP_PARAM_TAGREPORTDATA             240
+#define LLRP_PARAM_EPCDATA                   241
+#define LLRP_PARAM_LLRPSTATUS                287
+
+/* TV parametreler (typeNum < 128) */
+#define LLRP_TV_EPC_96                       13
+
+/* -------------------------------------------------------------------------- */
+/*                                 VERİ TİPLERİ                               */
+/* -------------------------------------------------------------------------- */
+
+typedef struct
+{
+    char hexString[64];
+} EpcData;
+
+osMessageQueueId_t epcQueueHandle;
+static uint8_t  rx_global[RX_BUF_SIZE];
+static uint32_t g_msg_id = 1;
+
+/* -------------------------------------------------------------------------- */
+/*                            YARDIMCI MAKROLAR                               */
+/* -------------------------------------------------------------------------- */
+
+#define WRITE_U8(buf, val)     (*(buf) = (uint8_t)(val))
+
+#define WRITE_U16_BE(buf, val) do {              \
+    (buf)[0] = (uint8_t)(((val) >> 8) & 0xFF);  \
+    (buf)[1] = (uint8_t)((val) & 0xFF);         \
+} while(0)
+
+#define WRITE_U32_BE(buf, val) do {               \
+    (buf)[0] = (uint8_t)(((val) >> 24) & 0xFF);  \
+    (buf)[1] = (uint8_t)(((val) >> 16) & 0xFF);  \
+    (buf)[2] = (uint8_t)(((val) >> 8)  & 0xFF);  \
+    (buf)[3] = (uint8_t)((val) & 0xFF);          \
+} while(0)
+
+#define READ_U16_BE(buf) \
+    (uint16_t)((((uint16_t)(buf)[0]) << 8) | (buf)[1])
+
+#define READ_U32_BE(buf) \
+    (uint32_t)((((uint32_t)(buf)[0]) << 24) | \
+               (((uint32_t)(buf)[1]) << 16) | \
+               (((uint32_t)(buf)[2]) <<  8) | \
+                ((uint32_t)(buf)[3]))
+
+/* -------------------------------------------------------------------------- */
+/*                              UI YARDIMCILARI                               */
+/* -------------------------------------------------------------------------- */
+
+static void send_ui(const char *m)
+{
+    EpcData d;
+    memset(&d, 0, sizeof(d));
+    strncpy(d.hexString, m, sizeof(d.hexString) - 1);
+    if (epcQueueHandle != NULL)
+        osMessageQueuePut(epcQueueHandle, &d, 0, 0);
+}
+
+static void send_status(const char *label, int value)
+{
+    char msg[64];
+    snprintf(msg, sizeof(msg), "%s:%d", label, value);
+    send_ui(msg);
+}
+
+static void send_epc_hex(const uint8_t *epc, uint8_t len)
+{
+    EpcData d;
+    uint8_t i;
+    uint8_t max_bytes = (len > 24) ? 24 : len;
+
+    memset(&d, 0, sizeof(d));
+    strcpy(d.hexString, "EPC:");
+
+    for (i = 0; i < max_bytes; i++)
+        snprintf(&d.hexString[4 + (i * 2)], 3, "%02X", epc[i]);
+
+    if (epcQueueHandle != NULL)
+        osMessageQueuePut(epcQueueHandle, &d, 0, 0);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         LLRP HEADER / FRAME BUILD                          */
+/* -------------------------------------------------------------------------- */
+
+static void write_msg_header(uint8_t *buf, uint16_t type, uint32_t length, uint32_t id)
+{
+    /* version=1 → bits[12:10]=001, typeNum→bits[9:0] */
+    WRITE_U16_BE(buf,     (uint16_t)((1U << 10) | (type & 0x03FFU)));
+    WRITE_U32_BE(buf + 2, length);
+    WRITE_U32_BE(buf + 6, id);
+}
+
+static void write_tlv_header(uint8_t *buf, uint16_t type, uint16_t length)
+{
+    /* TLV: top 2 bit = 00, sonra 14 bit typeNum */
+    WRITE_U16_BE(buf,     (uint16_t)(type & 0x3FFFU));
+    WRITE_U16_BE(buf + 2, length);
+}
+
+/* -------------------------------------------------------------------------
+ * ADD_ROSPEC — 75 byte
+ *
+ * Offset  Size  İçerik
+ * ------  ----  -------
+ *  0       10   Message header (type=20, len=75, id)
+ * 10        4   ROSpec TLV header (177, 65)
+ * 14        4   ROSpecID
+ * 18        1   Priority = 0
+ * 19        1   CurrentState = 0  ← KRİTİK, mutlaka 0
+ * 20        4   ROBoundarySpec TLV header (178, 18)
+ * 24        4   ROSpecStartTrigger TLV header (179, 5)
+ * 28        1   StartTriggerType = 0 (Null)
+ * 29        4   ROSpecStopTrigger TLV header (182, 9)
+ * 33        1   StopTriggerType = 0 (Null)
+ * 34        4   DurationTriggerValue = 0
+ * 38        4   AISpec TLV header (183, 24)
+ * 42        2   AntennaCount = 1  (u16v: önce count)
+ * 44        2   AntennaID[0] = 0  (0 = tüm antenler)
+ * 46        4   AISpecStopTrigger TLV header (184, 9)
+ * 50        1   AIStopTriggerType = 0 (Null)
+ * 51        4   DurationTrigger = 0
+ * 55        4   InventoryParameterSpec TLV header (186, 7)
+ * 59        2   InventoryParameterSpecID = 1
+ * 61        1   ProtocolID = 1 (C1G2)
+ * 62        4   ROReportSpec TLV header (237, 13)         ← YENİ
+ * 66        1   ROReportTrigger = 2 (End_Of_ROSpec)       ← YENİ
+ * 67        2   N = 0                                     ← YENİ
+ * 69        4   TagReportContentSelector TLV header(238,6)← YENİ
+ * 73        2   Selector bits = 0x0000 (hepsi disabled)   ← YENİ
+ * ------
+ * Toplam: 75 byte
+ * ------------------------------------------------------------------------- */
+static int build_add_rospec(uint8_t *frame, uint32_t msg_id, uint32_t rospec_id)
+{
+    /* --- Message header --- */
+    write_msg_header(frame, LLRP_MSG_ADD_ROSPEC, 75, msg_id);
+
+    /* --- ROSpec TLV @10, len=65 --- */
+    /* len = 4(hdr)+4(ROSpecID)+1(Pri)+1(State)+18(Boundary)+24(AISpec)+13(ROReport) = 65 */
+    write_tlv_header(frame + 10, LLRP_PARAM_ROSPEC, 65);
+    WRITE_U32_BE(frame + 14, rospec_id);    /* ROSpecID */
+    WRITE_U8    (frame + 18, 0x00);         /* Priority = 0 */
+    WRITE_U8    (frame + 19, 0x00);         /* CurrentState = 0 (Disabled) — ZORUNLU */
+
+    /* --- ROBoundarySpec @20, len=18 --- */
+    /* len = 4(hdr)+5(StartTrigger)+9(StopTrigger) = 18 */
+    write_tlv_header(frame + 20, LLRP_PARAM_ROBOUNDARYSPEC, 18);
+
+    /* ROSpecStartTrigger @24, len=5 */
+    write_tlv_header(frame + 24, LLRP_PARAM_ROSPECSTARTTRIGGER, 5);
+    WRITE_U8(frame + 28, 0x00);             /* Null — START_ROSPEC ile manuel başlat */
+
+    /* ROSpecStopTrigger @29, len=9 */
+    write_tlv_header(frame + 29, LLRP_PARAM_ROSPECSTOPTRIGGER, 9);
+    WRITE_U8    (frame + 33, 0x00);         /* Null — STOP_ROSPEC ile manuel durdur */
+    WRITE_U32_BE(frame + 34, 0x00000000);   /* DurationTriggerValue (Null için kullanılmıyor) */
+
+    /* --- AISpec @38, len=24 --- */
+    /* len = 4(hdr)+2+2(AntennaIDs u16v)+9(AIStopTrigger)+7(InvParamSpec) = 24 */
+    write_tlv_header(frame + 38, LLRP_PARAM_AISPEC, 24);
+    WRITE_U16_BE(frame + 42, 0x0001);       /* AntennaIDs: count=1 */
+    WRITE_U16_BE(frame + 44, 0x0000);       /* AntennaIDs: value[0]=0 (tüm antenler) */
+
+    /* AISpecStopTrigger @46, len=9 */
+    write_tlv_header(frame + 46, LLRP_PARAM_AISPECSTOPTRIGGER, 9);
+    WRITE_U8    (frame + 50, 0x00);         /* Null */
+    WRITE_U32_BE(frame + 51, 0x00000000);   /* DurationTrigger */
+
+    /* InventoryParameterSpec @55, len=7 */
+    write_tlv_header(frame + 55, LLRP_PARAM_INVENTORYPARAMETERSPEC, 7);
+    WRITE_U16_BE(frame + 59, 0x0001);       /* InventoryParameterSpecID = 1 */
+    WRITE_U8    (frame + 61, 0x01);         /* ProtocolID = 1 (EPCGlobal Class1 Gen2) */
+
+    /* --- ROReportSpec @62, len=13 --- */
+    /* len = 4(hdr)+1(trigger)+2(N)+6(ContentSelector) = 13 */
+    write_tlv_header(frame + 62, LLRP_PARAM_ROREPORTSPEC, 13);
+    WRITE_U8    (frame + 66, 0x02);         /* ROReportTrigger=2: Upon_N_Tags_Or_End_Of_ROSpec */
+    WRITE_U16_BE(frame + 67, 0x0000);       /* N=0 (sadece ROSpec bitişinde rapor) */
+
+    /* TagReportContentSelector @69, len=6 */
+    /* len = 4(hdr)+2(bit fields) = 6 */
+    write_tlv_header(frame + 69, LLRP_PARAM_TAGREPORTCONTENTSELECTOR, 6);
+    WRITE_U16_BE(frame + 73, 0x0000);       /* Tüm opsiyonel alanlar disabled (sadece EPC) */
+
+    return 75;
+}
+
+/* DELETE_ROSPEC — 14 byte (ROSpecID=0 → tümünü sil) */
+static int build_delete_rospec(uint8_t *frame, uint32_t msg_id, uint32_t rospec_id)
+{
+    write_msg_header(frame, LLRP_MSG_DELETE_ROSPEC, 14, msg_id);
+    WRITE_U32_BE(frame + 10, rospec_id);    /* 0 = tüm ROSpec'leri sil */
+    return 14;
+}
+
+/* ENABLE_ROSPEC — 14 byte */
+static int build_enable_rospec(uint8_t *frame, uint32_t msg_id, uint32_t rospec_id)
+{
+    write_msg_header(frame, LLRP_MSG_ENABLE_ROSPEC, 14, msg_id);
+    WRITE_U32_BE(frame + 10, rospec_id);
+    return 14;
+}
+
+/* START_ROSPEC — 14 byte */
+static int build_start_rospec(uint8_t *frame, uint32_t msg_id, uint32_t rospec_id)
+{
+    write_msg_header(frame, LLRP_MSG_START_ROSPEC, 14, msg_id);
+    WRITE_U32_BE(frame + 10, rospec_id);
+    return 14;
+}
+
+/* KEEPALIVE_ACK — 10 byte */
+static int build_keepalive_ack(uint8_t *frame, uint32_t msg_id)
+{
+    write_msg_header(frame, LLRP_MSG_KEEPALIVE_ACK, 10, msg_id);
+    return 10;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            SOCKET YARDIMCILARI                             */
+/* -------------------------------------------------------------------------- */
+
+static int wait_socket_readable(int sock, int timeout_ms)
+{
+    fd_set readfds;
+    struct timeval tv;
+    int ret;
+
+    FD_ZERO(&readfds);
+    FD_SET(sock, &readfds);
+    tv.tv_sec  = timeout_ms / 1000;
+    tv.tv_usec = (timeout_ms % 1000) * 1000;
+
+    ret = select(sock + 1, &readfds, NULL, NULL, &tv);
+
+    if (ret > 0 && FD_ISSET(sock, &readfds))
+        return 1;
+    if (ret == 0)
+        return 0;
+    return -1;
+}
+
+static int recv_exact_timeout(int sock, uint8_t *buf, int len, int timeout_ms)
+{
+    int total = 0;
+    int n;
+
+    while (total < len)
+    {
+        int rdy = wait_socket_readable(sock, timeout_ms);
+        if (rdy <= 0)
+            return -1;
+
+        n = recv(sock, (char *)(buf + total), len - total, 0);
+        if (n <= 0)
+            return -1;
+
+        total += n;
+    }
+    return total;
+}
+
+/* Tam bir LLRP mesajını buffer'a alır. Dönen değer toplam byte sayısı veya negatif hata. */
+static int recv_llrp_message(int sock, uint8_t *buf, int buf_size)
+{
+    int r;
+    uint32_t total_len;
+
+    if (buf_size < LLRP_HEADER_LEN)
+        return -1;
+
+    /* 1. 10 byte header al */
+    r = recv_exact_timeout(sock, buf, LLRP_HEADER_LEN, SOCKET_TIMEOUT_MS);
+    if (r != LLRP_HEADER_LEN)
+        return -10;
+
+    /* 2. Header'dan toplam uzunluğu oku */
+    total_len = READ_U32_BE(buf + 2);
+    if (total_len < (uint32_t)LLRP_HEADER_LEN || total_len > (uint32_t)buf_size)
+        return -11;
+
+    /* 3. Kalan payload'ı al */
+    if (total_len > (uint32_t)LLRP_HEADER_LEN)
+    {
+        r = recv_exact_timeout(sock,
+                               buf + LLRP_HEADER_LEN,
+                               (int)(total_len - LLRP_HEADER_LEN),
+                               SOCKET_TIMEOUT_MS);
+        if (r != (int)(total_len - LLRP_HEADER_LEN))
+            return -12;
+    }
+    return (int)total_len;
+}
+
+static int send_all(int sock, const uint8_t *buf, int len)
+{
+    int sent = 0;
+    int n;
+
+    while (sent < len)
+    {
+        n = send(sock, (const char *)(buf + sent), len - sent, 0);
+        if (n <= 0)
+            return -1;
+        sent += n;
+    }
+    return 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              LLRP PARSE                                    */
+/* -------------------------------------------------------------------------- */
+
+static uint16_t llrp_get_msg_type(const uint8_t *buf)
+{
+    return (uint16_t)(READ_U16_BE(buf) & 0x03FFU);
+}
+
+static uint32_t llrp_get_msg_id(const uint8_t *buf)
+{
+    return READ_U32_BE(buf + 6);
+}
+
+/* Response mesajlarındaki LLRPStatus.StatusCode'u döndürür (0=Başarı) */
+static uint16_t llrp_get_status_code(const uint8_t *response_buf)
+{
+    const uint8_t *ptr = response_buf + 10;
+    uint16_t ptype = (uint16_t)(READ_U16_BE(ptr) & 0x3FFFU);
+
+    if (ptype == LLRP_PARAM_LLRPSTATUS)
+        return READ_U16_BE(ptr + 4);
+
+    return 0xFFFFU;  /* Parse hatası */
+}
+
+/*
+ * TV format parametre boyları (header byte dahil):
+ * TV header = 1 byte (bit7=1, bits[6:0]=typeNum)
+ * Veri hemen arkasından gelir.
+ */
+static uint8_t tv_param_size(uint8_t typeNum)
+{
+    switch (typeNum)
+    {
+        case 1:  return 3;   /* AntennaID: 1+2 */
+        case 2:  return 9;   /* FirstSeenTimestampUTC: 1+8 */
+        case 3:  return 9;   /* FirstSeenTimestampUptime: 1+8 */
+        case 4:  return 9;   /* LastSeenTimestampUTC: 1+8 */
+        case 5:  return 9;   /* LastSeenTimestampUptime: 1+8 */
+        case 6:  return 2;   /* PeakRSSI: 1+1 */
+        case 7:  return 3;   /* ChannelIndex: 1+2 */
+        case 8:  return 3;   /* TagSeenCount: 1+2 */
+        case 9:  return 5;   /* ROSpecID: 1+4 */
+        case 10: return 3;   /* InventoryParameterSpecID: 1+2 */
+        case 13: return 13;  /* EPC_96: 1+12 (96 bit = 12 byte) */
+        case 14: return 3;   /* SpecIndex: 1+2 */
+        case 15: return 3;   /* ClientRequestOpSpecResult: 1+2 */
+        case 16: return 5;   /* AccessSpecID: 1+4 */
+        default: return 0;   /* Bilinmiyor — çağıran çıkış yapmalı */
+    }
+}
+
+/*
+ * Tek bir TagReportData parametresinin içini parse eder.
+ * İçinde EPCParameter bulursa send_epc_hex() çağırır.
+ *
+ * TagReportData yapısı:
+ *   EPCParameter (choice, repeat=1): EPC_96 [TV,13] veya EPCData [TLV,241]
+ *   Opsiyonel TV parametreler: AntennaID, PeakRSSI, vb.
+ */
+static void parse_tag_report_data(const uint8_t *data, uint32_t len)
+{
+    const uint8_t *ptr = data;
+    const uint8_t *end = data + len;
+
+    while (ptr < end)
+    {
+        if (*ptr & 0x80U)
+        {
+            /* --- TV format (bit7=1) --- */
+            uint8_t tv_type = (uint8_t)(*ptr & 0x7FU);
+
+            if (tv_type == LLRP_TV_EPC_96)
+            {
+                /* EPC_96: 12 byte sabit uzunluk (96 bit) */
+                if ((ptr + 13) <= end)
+                    send_epc_hex(ptr + 1, 12);
+                return;  /* TagReportData başına tam bir EPCParameter beklenir */
+            }
+            else
+            {
+                uint8_t sz = tv_param_size(tv_type);
+                if (sz == 0 || (ptr + sz) > end)
+                    return;  /* Bilinmeyen veya sınır dışı — güvenli çıkış */
+                ptr += sz;
+            }
+        }
+        else
+        {
+            /* --- TLV format (bit7=0) --- */
+            if ((ptr + 4) > end)
+                return;
+
+            uint16_t tlv_type = (uint16_t)(READ_U16_BE(ptr) & 0x3FFFU);
+            uint16_t tlv_len  = READ_U16_BE(ptr + 2);
+
+            if (tlv_len < 4 || (ptr + tlv_len) > end)
+                return;
+
+            if (tlv_type == LLRP_PARAM_EPCDATA)
+            {
+                /* EPCData: bit_count (u16) + veri byte'ları */
+                if (tlv_len >= 6)
+                {
+                    uint16_t bit_count  = READ_U16_BE(ptr + 4);
+                    uint8_t  byte_count = (uint8_t)((bit_count + 7U) / 8U);
+
+                    if ((uint16_t)(6 + byte_count) <= tlv_len)
+                        send_epc_hex(ptr + 6, byte_count);
+                }
+                return;
+            }
+
+            ptr += tlv_len;
+        }
+    }
+}
+
+/*
+ * RO_ACCESS_REPORT mesajını parse eder.
+ * Mesaj: [10 byte header] [TagReportData TLV...] [RFSurveyReportData TLV...] [Custom...]
+ * Her TagReportData için parse_tag_report_data() çağırır.
+ */
+static void llrp_parse_ro_access_report(const uint8_t *buf, uint32_t len)
+{
+    uint32_t     msg_len;
+    const uint8_t *ptr;
+    const uint8_t *end;
+
+    (void)len;
+
+    msg_len = READ_U32_BE(buf + 2);
+    if (msg_len < (uint32_t)LLRP_HEADER_LEN)
+        return;
+
+    ptr = buf + LLRP_HEADER_LEN;
+    end = buf + msg_len;
+
+    while (ptr < end)
+    {
+        uint16_t ptype;
+        uint16_t plen;
+
+        /* RO_ACCESS_REPORT yalnızca TLV parametreler içerir (top 2 bit = 00) */
+        if ((*ptr & 0xC0U) != 0)
+            break;
+
+        if ((ptr + 4) > end)
+            break;
+
+        ptype = (uint16_t)(READ_U16_BE(ptr) & 0x3FFFU);
+        plen  = READ_U16_BE(ptr + 2);
+
+        if (plen < 4 || (ptr + plen) > end)
+            break;
+
+        if (ptype == LLRP_PARAM_TAGREPORTDATA)
+        {
+            parse_tag_report_data(ptr + 4, (uint32_t)(plen - 4));
+        }
+        /* RFSurveyReportData (242) ve Custom (1023) şimdilik atlanır */
+
+        ptr += plen;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                      ASYNC MESAJLAR / RESPONSE BEKLEME                     */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Asenkron gelen mesajları işler (KEEPALIVE, EVENT_NOTIFICATION, RO_ACCESS_REPORT).
+ * İşlendiyse 1, tanınmayan mesajsa 0 döner.
+ */
+static int handle_async_message(int sock, const uint8_t *buf, int len)
+{
+    uint16_t mt = llrp_get_msg_type(buf);
+
+    (void)len;
+
+    if (mt == LLRP_MSG_KEEPALIVE)
+    {
+        uint8_t ack[10];
+        int ack_len = build_keepalive_ack(ack, llrp_get_msg_id(buf));
+        if (send_all(sock, ack, ack_len) == 0)
+            send_ui("KA_ACK");
+        else
+            send_ui("KA_ACK_ERR");
+        return 1;
+    }
+
+    if (mt == LLRP_MSG_READER_EVENT_NOTIFICATION)
+    {
+        send_ui("EVENT");
+        return 1;
+    }
+
+    if (mt == LLRP_MSG_RO_ACCESS_REPORT)
+    {
+        llrp_parse_ro_access_report(buf, (uint32_t)len);
+        return 1;
+    }
+
+    return 0;
+}
+
+/*
+ * Beklenen mesaj tipini alana kadar döngüde okur.
+ * Asenkron mesajlar handle_async_message() ile işlenir.
+ * Başarıda 0, hata/timeout'ta negatif değer döner.
+ */
+static int wait_for_message_type(int sock, uint16_t expected_type, const char *label)
+{
+    while (1)
+    {
+        int len = recv_llrp_message(sock, rx_global, RX_BUF_SIZE);
+        if (len <= 0)
+        {
+            char msg[64];
+            snprintf(msg, sizeof(msg), "%s TMOUT:%d", label, len);
+            send_ui(msg);
+            return -1;
+        }
+
+        uint16_t mt = llrp_get_msg_type(rx_global);
+
+        /* Asenkron mesaj mı? */
+        if (handle_async_message(sock, rx_global, len))
+            continue;
+
+        /* Beklenen response mu? */
+        if (mt == expected_type)
+        {
+            uint16_t status = llrp_get_status_code(rx_global);
+            if (status == 0)
+            {
+                char ok[48];
+                snprintf(ok, sizeof(ok), "%s OK", label);
+                send_ui(ok);
+                return 0;
+            }
+            else
+            {
+                char err[64];
+                snprintf(err, sizeof(err), "%s ERR:%u", label, status);
+                send_ui(err);
+                return -2;
+            }
+        }
+
+        if (mt == LLRP_MSG_ERROR_MESSAGE)
+        {
+            uint16_t status = llrp_get_status_code(rx_global);
+            char err[64];
+            snprintf(err, sizeof(err), "%s ERRMSG:%u", label, status);
+            send_ui(err);
+            return -3;
+        }
+
+        /* Beklenmeyen ama tanınmayan mesaj — logla, döngüye devam et */
+        {
+            char msg[64];
+            snprintf(msg, sizeof(msg), "%s SKIP MT:%u", label, mt);
+            send_ui(msg);
+        }
+    }
+}
+
+/* Bağlantı kurulduğunda reader'ın gönderdiği ilk EVENT_NOTIFICATION beklenir */
+static int wait_initial_reader_event(int sock)
+{
+    while (1)
+    {
+        int len = recv_llrp_message(sock, rx_global, RX_BUF_SIZE);
+        if (len <= 0)
+        {
+            send_status("EVT TMOUT", len);
+            return -1;
+        }
+
+        uint16_t mt = llrp_get_msg_type(rx_global);
+
+        if (mt == LLRP_MSG_READER_EVENT_NOTIFICATION)
+        {
+            send_ui("BAĞLANTI EVT OK");
+            return 0;
+        }
+
+        /* Başka bir şey gelirse asenkron handler'a ver, döngüye devam */
+        if (handle_async_message(sock, rx_global, len))
+            continue;
+
+        /* Tanınmayan mesaj — yine de devam et (strict olmayalım) */
+        {
+            char msg[48];
+            snprintf(msg, sizeof(msg), "ILK MT:%u", mt);
+            send_ui(msg);
+        }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                           LLRP KOMUT GÖNDERME                              */
+/* -------------------------------------------------------------------------- */
+
+static int send_delete_rospec_and_wait(int sock, uint32_t rospec_id)
+{
+    uint8_t frame[14];
+    int flen = build_delete_rospec(frame, g_msg_id++, rospec_id);
+
+    if (send_all(sock, frame, flen) < 0)
+    {
+        send_ui("DEL SEND ERR");
+        return -1;
+    }
+    /* DELETE_ROSPEC_RESPONSE (31) beklenir */
+    return wait_for_message_type(sock, LLRP_MSG_DELETE_ROSPEC_RESPONSE, "DEL_RO");
+}
+
+static int send_add_rospec_and_wait(int sock, uint32_t rospec_id)
+{
+    uint8_t frame[75];   /* ROReportSpec eklendi: 62→75 byte */
+    int flen = build_add_rospec(frame, g_msg_id++, rospec_id);
+
+    if (send_all(sock, frame, flen) < 0)
+    {
+        send_ui("ADD SEND ERR");
+        return -1;
+    }
+    return wait_for_message_type(sock, LLRP_MSG_ADD_ROSPEC_RESPONSE, "ADD_RO");
+}
+
+static int send_enable_rospec_and_wait(int sock, uint32_t rospec_id)
+{
+    uint8_t frame[14];
+    int flen = build_enable_rospec(frame, g_msg_id++, rospec_id);
+
+    if (send_all(sock, frame, flen) < 0)
+    {
+        send_ui("ENA SEND ERR");
+        return -1;
+    }
+    return wait_for_message_type(sock, LLRP_MSG_ENABLE_ROSPEC_RESPONSE, "ENA_RO");
+}
+
+static int send_start_rospec_and_wait(int sock, uint32_t rospec_id)
+{
+    uint8_t frame[14];
+    int flen = build_start_rospec(frame, g_msg_id++, rospec_id);
+
+    if (send_all(sock, frame, flen) < 0)
+    {
+        send_ui("STA SEND ERR");
+        return -1;
+    }
+    return wait_for_message_type(sock, LLRP_MSG_START_ROSPEC_RESPONSE, "STA_RO");
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                ANA GÖREV                                   */
+/* -------------------------------------------------------------------------- */
+
+void StartLlrpTask(void *argument)
+{
+    int s;
+    struct sockaddr_in addr;
+
+    (void)argument;
+
+    if (epcQueueHandle == NULL)
+        epcQueueHandle = osMessageQueueNew(10, sizeof(EpcData), NULL);
+
+    /* lwIP başlaması için bekle */
+    osDelay(3000);
+
+    while (1)
+    {
+        send_ui("BAĞLANIYOR...");
+
+        /* 1) TCP soket aç */
+        s = socket(AF_INET, SOCK_STREAM, 0);
+        if (s < 0)
+        {
+            send_ui("SOCKET ERR");
+            osDelay(3000);
+            continue;
+        }
+
+        memset(&addr, 0, sizeof(addr));
+        addr.sin_family      = AF_INET;
+        addr.sin_port        = htons((uint16_t)READER_PORT);
+        addr.sin_addr.s_addr = inet_addr(READER_IP_ADDR);
+
+        if (connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+        {
+            closesocket(s);
+            send_ui("CONNECT ERR");
+            osDelay(5000);
+            continue;
+        }
+
+        send_ui("TCP OK");
+
+        /* 2) İlk READER_EVENT_NOTIFICATION (bağlantı onayı) */
+        if (wait_initial_reader_event(s) < 0)
+            goto reconnect;
+
+        /* 3) Varsa eski ROSpec'leri temizle (0=tümü)
+         *    Yeniden bağlanmada "ROSpecID already in use" hatasını önler */
+        if (send_delete_rospec_and_wait(s, 0) < 0)
+        {
+            /* DELETE hata verse bile devam et — ilk bağlantıda boş olabilir */
+            send_ui("DEL SKIP");
+        }
+
+        /* 4) ADD_ROSPEC (75 byte, ROReportSpec dahil) */
+        if (send_add_rospec_and_wait(s, 1) < 0)
+            goto reconnect;
+
+        /* 5) ENABLE_ROSPEC */
+        if (send_enable_rospec_and_wait(s, 1) < 0)
+            goto reconnect;
+
+        /* 6) START_ROSPEC */
+        if (send_start_rospec_and_wait(s, 1) < 0)
+            goto reconnect;
+
+        send_ui("OKUMA AKTIF");
+
+        /* 7) Ana dinleme döngüsü */
+        while (1)
+        {
+            int len = recv_llrp_message(s, rx_global, RX_BUF_SIZE);
+            if (len <= 0)
+            {
+                send_status("DINLEME ERR", len);
+                break;
+            }
+
+            uint16_t mt = llrp_get_msg_type(rx_global);
+
+            if (mt == LLRP_MSG_RO_ACCESS_REPORT)
+            {
+                llrp_parse_ro_access_report(rx_global, (uint32_t)len);
+            }
+            else if (mt == LLRP_MSG_KEEPALIVE)
+            {
+                uint8_t ack[10];
+                int ack_len = build_keepalive_ack(ack, llrp_get_msg_id(rx_global));
+                if (send_all(s, ack, ack_len) != 0)
+                    send_ui("KA_ACK ERR");
+            }
+            else if (mt == LLRP_MSG_READER_EVENT_NOTIFICATION)
+            {
+                /* ROSpec/AISpec başlangıç-bitiş olayları — şimdilik yoksay */
+            }
+            else
+            {
+                char msg[48];
+                snprintf(msg, sizeof(msg), "MT:%u", mt);
+                send_ui(msg);
+            }
+
+            /* Küçük yield — FreeRTOS scheduler'a zaman ver */
+            osDelay(1);
+        }
+
+reconnect:
+        closesocket(s);
+        send_ui("SOKET KAPANDI");
+        osDelay(3000);
+    }
+}

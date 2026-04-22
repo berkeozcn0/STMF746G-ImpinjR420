@@ -1,0 +1,9 @@
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:137:13:send_epc_hex	3
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:367:12:send_all	3
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:121:13:send_ui	2
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:506:13:llrp_parse_ro_access_report.constprop	21
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:315:12:recv_exact_timeout.constprop	6
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:336:12:recv_llrp_message.constprop	5
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:557:12:handle_async_message.constprop.isra	5
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:594:12:wait_for_message_type	8
+C:/TouchGFXProjects/ethernet/Core/Src/freertos.c:745:6:StartLlrpTask	20
