@@ -10,6 +10,22 @@ KEEP extern const uint32_t indicesGb[] TEXT_LOCATION_FLASH_ATTRIBUTE;
 // Remap all strings
 TEXT_LOCATION_FLASH_PRAGMA
 KEEP extern const uint32_t indicesGb[] TEXT_LOCATION_FLASH_ATTRIBUTE = {
-    190, // T___SINGLEUSE_VC65: "EPC: Bekleniyor..."
+    415, // T___SINGLEUSE_D4WM: "DURDUR"
+    408, // T___SINGLEUSE_F693: "BASLAT"
+    401, // T___SINGLEUSE_L4YU: "BAGLAN"
+    422, // T___SINGLEUSE_VOME: "HAZIR"
+    360, // T___SINGLEUSE_PP16: "-------------"
+    393, // T___SINGLEUSE_MSFS: "ANTEN 2"
+    346, // T___SINGLEUSE_AI8Q: "------------ "
+    385, // T___SINGLEUSE_U6QG: "ANTEN 1"
+    383, // T___SINGLEUSE_B04Z: "<>"
+    383, // T___SINGLEUSE_9C06: "<>"
+    383, // T___SINGLEUSE_WFFQ: "<>"
+    383, // T___SINGLEUSE_KKQK: "<>"
+    190, // T___SINGLEUSE_XSAU: "<>                                                           "
+    299, // T___SINGLEUSE_FBK1: "<>                                             "
+    251, // T___SINGLEUSE_WMU1: "<>                                              "
+    383, // T___SINGLEUSE_8D99: "<>"
+    374, // T_TALBLANT1: "New Text"
     0    // T_TEXTAREAEPC: "   <>          \n                                                  \n\n                                                    \n                                                                     "
 };

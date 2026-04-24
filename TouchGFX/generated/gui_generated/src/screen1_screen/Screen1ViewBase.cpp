@@ -11,14 +11,101 @@ Screen1ViewBase::Screen1ViewBase()
     __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
     add(__background);
 
-    textAreaEpc.setXY(-3, 76);
-    textAreaEpc.setColor(touchgfx::Color::getColorFromRGB(255, 0, 0));
-    textAreaEpc.setLinespacing(0);
-    Unicode::snprintf(textAreaEpcBuffer, TEXTAREAEPC_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_VC65).getText());
-    textAreaEpc.setWildcard(textAreaEpcBuffer);
-    textAreaEpc.resizeToCurrentText();
-    textAreaEpc.setTypedText(touchgfx::TypedText(T_TEXTAREAEPC));
-    add(textAreaEpc);
+    bgBtnStop.setPosition(352, 176, 128, 37);
+    bgBtnStop.setColor(touchgfx::Color::getColorFromRGB(255, 0, 8));
+    add(bgBtnStop);
+
+    bgBtnStart.setPosition(352, 113, 128, 37);
+    bgBtnStart.setColor(touchgfx::Color::getColorFromRGB(4, 255, 0));
+    add(bgBtnStart);
+
+    bgBtnConnect.setPosition(352, 40, 128, 37);
+    bgBtnConnect.setColor(touchgfx::Color::getColorFromRGB(0, 145, 255));
+    add(bgBtnConnect);
+
+    bgStatus.setPosition(0, 235, 480, 37);
+    bgStatus.setColor(touchgfx::Color::getColorFromRGB(189, 163, 36));
+    add(bgStatus);
+
+    bgAnt2.setPosition(0, 111, 319, 102);
+    bgAnt2.setColor(touchgfx::Color::getColorFromRGB(0, 102, 48));
+    add(bgAnt2);
+
+    bgAnt1.setPosition(0, 0, 319, 102);
+    bgAnt1.setColor(touchgfx::Color::getColorFromRGB(0, 52, 130));
+    add(bgAnt1);
+
+    taLblAnt1.setXY(0, 0);
+    taLblAnt1.setColor(touchgfx::Color::getColorFromRGB(125, 227, 255));
+    taLblAnt1.setLinespacing(0);
+    Unicode::snprintf(taLblAnt1Buffer, TALBLANT1_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_U6QG).getText());
+    taLblAnt1.setWildcard(taLblAnt1Buffer);
+    taLblAnt1.resizeToCurrentText();
+    taLblAnt1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_B04Z));
+    add(taLblAnt1);
+
+    taLblAnt2.setXY(0, 113);
+    taLblAnt2.setColor(touchgfx::Color::getColorFromRGB(125, 227, 255));
+    taLblAnt2.setLinespacing(0);
+    Unicode::snprintf(taLblAnt2Buffer, TALBLANT2_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_MSFS).getText());
+    taLblAnt2.setWildcard(taLblAnt2Buffer);
+    taLblAnt2.resizeToCurrentText();
+    taLblAnt2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_8D99));
+    add(taLblAnt2);
+
+    taAnt1.setXY(0, 40);
+    taAnt1.setColor(touchgfx::Color::getColorFromRGB(212, 255, 0));
+    taAnt1.setLinespacing(0);
+    Unicode::snprintf(taAnt1Buffer, TAANT1_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_AI8Q).getText());
+    taAnt1.setWildcard(taAnt1Buffer);
+    taAnt1.resizeToCurrentText();
+    taAnt1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_WMU1));
+    add(taAnt1);
+
+    taAnt2.setXY(0, 150);
+    taAnt2.setColor(touchgfx::Color::getColorFromRGB(212, 255, 0));
+    taAnt2.setLinespacing(0);
+    Unicode::snprintf(taAnt2Buffer, TAANT2_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_PP16).getText());
+    taAnt2.setWildcard(taAnt2Buffer);
+    taAnt2.resizeToCurrentText();
+    taAnt2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_FBK1));
+    add(taAnt2);
+
+    taStatus.setXY(0, 241);
+    taStatus.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    taStatus.setLinespacing(0);
+    Unicode::snprintf(taStatusBuffer, TASTATUS_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_VOME).getText());
+    taStatus.setWildcard(taStatusBuffer);
+    taStatus.resizeToCurrentText();
+    taStatus.setTypedText(touchgfx::TypedText(T___SINGLEUSE_XSAU));
+    add(taStatus);
+
+    taBtnConnect.setXY(373, 46);
+    taBtnConnect.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    taBtnConnect.setLinespacing(0);
+    Unicode::snprintf(taBtnConnectBuffer, TABTNCONNECT_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_L4YU).getText());
+    taBtnConnect.setWildcard(taBtnConnectBuffer);
+    taBtnConnect.resizeToCurrentText();
+    taBtnConnect.setTypedText(touchgfx::TypedText(T___SINGLEUSE_KKQK));
+    add(taBtnConnect);
+
+    taBtnStart.setXY(376, 119);
+    taBtnStart.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    taBtnStart.setLinespacing(0);
+    Unicode::snprintf(taBtnStartBuffer, TABTNSTART_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_F693).getText());
+    taBtnStart.setWildcard(taBtnStartBuffer);
+    taBtnStart.resizeToCurrentText();
+    taBtnStart.setTypedText(touchgfx::TypedText(T___SINGLEUSE_WFFQ));
+    add(taBtnStart);
+
+    taBtnStop.setXY(371, 182);
+    taBtnStop.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    taBtnStop.setLinespacing(0);
+    Unicode::snprintf(taBtnStopBuffer, TABTNSTOP_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_D4WM).getText());
+    taBtnStop.setWildcard(taBtnStopBuffer);
+    taBtnStop.resizeToCurrentText();
+    taBtnStop.setTypedText(touchgfx::TypedText(T___SINGLEUSE_9C06));
+    add(taBtnStop);
 }
 
 Screen1ViewBase::~Screen1ViewBase()

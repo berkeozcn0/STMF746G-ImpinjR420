@@ -397,6 +397,10 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
       Txbuffer[i].next = NULL;
     }
 
+    /* DCache actifken TX verilerini RAM'e yaz (DMA cache degil RAM'den okur) */
+    SCB_CleanDCache_by_Addr((uint32_t *)q->payload,
+                            (int32_t)((q->len + 31) & ~31));
+
     i++;
   }
 

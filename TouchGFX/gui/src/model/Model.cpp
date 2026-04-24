@@ -2,36 +2,56 @@
 #include <gui/model/ModelListener.hpp>
 #include "cmsis_os.h"
 
-// --- C VE C++ KÖPRÜSÜ ---
-extern "C"
-{
+extern "C" {
     extern osMessageQueueId_t epcQueueHandle;
+    extern osMessageQueueId_t statusQueueHandle;
+    extern osMessageQueueId_t cmdQueueHandle;
 }
 
-// C tarafı ile tam uyumlu olması için 32 byte yapıldı
+/* Must match C-side EpcData exactly (64 bytes) */
 struct EpcData {
-    char hexString[64];
+    char    hexString[60];
+    uint8_t antennaId;
+    uint8_t _pad[3];
 };
 
-Model::Model() : modelListener(0)
-{
-}
+/* Must match C-side StatusMsg exactly (64 bytes) */
+struct StatusMsg {
+    char text[64];
+};
+
+Model::Model() : modelListener(0) {}
 
 void Model::tick()
 {
-    EpcData receivedEpc;
-
-    // Kuyruk kontrolü
+    EpcData epc;
     if (epcQueueHandle != NULL)
     {
-        // Kuyruktan veri çek (0U: Beklemeden)
-        if (osMessageQueueGet(epcQueueHandle, &receivedEpc, NULL, 0U) == osOK)
+        while (osMessageQueueGet(epcQueueHandle, &epc, NULL, 0U) == osOK)
         {
             if (modelListener != 0)
             {
-                // Presenter'a gönder
-                modelListener->updateEpcText(receivedEpc.hexString);
+                if (epc.antennaId == 2)
+                    modelListener->updateAntenna2Epc(epc.hexString);
+                else
+                    modelListener->updateAntenna1Epc(epc.hexString);
             }
         }
     }
+
+    StatusMsg st;
+    if (statusQueueHandle != NULL)
+    {
+        if (osMessageQueueGet(statusQueueHandle, &st, NULL, 0U) == osOK)
+        {
+            if (modelListener != 0)
+                modelListener->updateStatusText(st.text);
+        }
+    }
+}
+
+void Model::sendCommand(unsigned char cmd)
+{
+    if (cmdQueueHandle != NULL)
+        osMessageQueuePut(cmdQueueHandle, &cmd, 0, 0);
 }

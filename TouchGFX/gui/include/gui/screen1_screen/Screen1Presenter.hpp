@@ -12,20 +12,20 @@ class Screen1Presenter : public touchgfx::Presenter, public ModelListener
 {
 public:
     Screen1Presenter(Screen1View& v);
-
     virtual void activate();
     virtual void deactivate();
     virtual ~Screen1Presenter() {};
 
-    /**
-     * ModelListener'daki fonksiyonu burada 'override' ediyoruz.
-     * Model.cpp'den gelen veri buraya düşer.
-     */
-    virtual void updateEpcText(char* epc) override;
+    virtual void updateAntenna1Epc(char* epc) override;
+    virtual void updateAntenna2Epc(char* epc) override;
+    virtual void updateStatusText(char* status) override;
+
+    void onConnectClicked();
+    void onStartClicked();
+    void onStopClicked();
 
 private:
     Screen1Presenter();
-
     Screen1View& view;
 };
 

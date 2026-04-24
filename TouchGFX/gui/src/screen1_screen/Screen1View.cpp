@@ -1,20 +1,11 @@
 #include <gui/screen1_screen/Screen1View.hpp>
-#include <texts/TextKeysAndLanguages.hpp>
-#include <string.h>
+#include <touchgfx/events/ClickEvent.hpp>
 
-Screen1View::Screen1View()
-{
-}
+Screen1View::Screen1View() {}
 
 void Screen1View::setupScreen()
 {
     Screen1ViewBase::setupScreen();
-
-    // --- KANIT TESTİ ---
-    // Ekran ilk açıldığında doğrudan bu yazıyı basıyoruz.
-    // Eğer ekran açıldığında bu yazıyı görüyorsan, TouchGFX kodlarında HİÇBİR sorun yok demektir.
-    Unicode::strncpy(textAreaEpcBuffer, "SISTEM BEKLIYOR", TEXTAREAEPC_SIZE);
-    textAreaEpc.invalidate();
 }
 
 void Screen1View::tearDownScreen()
@@ -22,18 +13,43 @@ void Screen1View::tearDownScreen()
     Screen1ViewBase::tearDownScreen();
 }
 
-/**
- * Presenter'dan gelen EPC bilgisini ekrana yansıtan ana fonksiyon.
- */
-void Screen1View::updateEpcText(char* epc)
+void Screen1View::updateAntenna1Epc(char* epc)
 {
-    // C tarafındaki pointer'ın boş gelme ihtimaline karşı güvenlik kontrolü
-    if(epc != nullptr && strlen(epc) > 0)
-    {
-        // 1. Gelen metni TextArea belleğine kopyala
-        Unicode::strncpy(textAreaEpcBuffer, epc, TEXTAREAEPC_SIZE);
+    if (!epc || !epc[0]) return;
+    touchgfx::Unicode::strncpy(taAnt1Buffer, epc, TAANT1_SIZE);
+    taAnt1.invalidate();
+}
 
-        // 2. Ekranın o bölgesini yenile (Invalidate)
-        textAreaEpc.invalidate();
-    }
+void Screen1View::updateAntenna2Epc(char* epc)
+{
+    if (!epc || !epc[0]) return;
+    touchgfx::Unicode::strncpy(taAnt2Buffer, epc, TAANT2_SIZE);
+    taAnt2.invalidate();
+}
+
+void Screen1View::updateStatusText(char* status)
+{
+    if (!status || !status[0]) return;
+    touchgfx::Unicode::strncpy(taStatusBuffer, status, TASTATUS_SIZE);
+    taStatus.invalidate();
+}
+
+void Screen1View::handleClickEvent(const touchgfx::ClickEvent& evt)
+{
+    if (evt.getType() != touchgfx::ClickEvent::RELEASED) return;
+
+    int x = evt.getX(), y = evt.getY();
+    touchgfx::Rect r;
+
+    r = bgBtnConnect.getRect();
+    if (x >= r.x && x < r.x + r.width && y >= r.y && y < r.y + r.height)
+    { presenter->onConnectClicked(); return; }
+
+    r = bgBtnStart.getRect();
+    if (x >= r.x && x < r.x + r.width && y >= r.y && y < r.y + r.height)
+    { presenter->onStartClicked(); return; }
+
+    r = bgBtnStop.getRect();
+    if (x >= r.x && x < r.x + r.width && y >= r.y && y < r.y + r.height)
+    { presenter->onStopClicked(); return; }
 }

@@ -1,9 +1,12 @@
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:144:18:virtual void touchgfx::Screen::handleTickEvent()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:154:18:virtual void touchgfx::Screen::handleKeyEvent(uint8_t)	1
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:20:6:virtual void Screen1View::tearDownScreen()	1
-../../TouchGFX/gui/include/gui/screen1_screen/Screen1View.hpp:11:13:Screen1View::~Screen1View()	1
-../../TouchGFX/gui/include/gui/screen1_screen/Screen1View.hpp:11:13:virtual Screen1View::~Screen1View()	1
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:5:1:Screen1View::Screen1View()	1
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:9:6:virtual void Screen1View::setupScreen()	1
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:28:6:virtual void Screen1View::updateEpcText(char*)	3
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:11:6:virtual void Screen1View::tearDownScreen()	1
+../../TouchGFX/gui/include/gui/screen1_screen/Screen1View.hpp:12:13:Screen1View::~Screen1View()	1
+../../TouchGFX/gui/include/gui/screen1_screen/Screen1View.hpp:12:13:virtual Screen1View::~Screen1View()	1
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:37:6:virtual void Screen1View::handleClickEvent(const touchgfx::ClickEvent&)	14
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:4:1:Screen1View::Screen1View()	1
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:6:6:virtual void Screen1View::setupScreen()	1
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:16:6:virtual void Screen1View::updateAntenna1Epc(char*)	3
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:23:6:virtual void Screen1View::updateAntenna2Epc(char*)	3
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen1_screen/Screen1View.cpp:30:6:virtual void Screen1View::updateStatusText(char*)	3

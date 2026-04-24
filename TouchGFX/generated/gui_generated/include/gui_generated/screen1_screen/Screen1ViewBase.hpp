@@ -26,13 +26,40 @@ protected:
      * Member Declarations
      */
     touchgfx::Box __background;
-    touchgfx::TextAreaWithOneWildcard textAreaEpc;
+    touchgfx::Box bgBtnStop;
+    touchgfx::Box bgBtnStart;
+    touchgfx::Box bgBtnConnect;
+    touchgfx::Box bgStatus;
+    touchgfx::Box bgAnt2;
+    touchgfx::Box bgAnt1;
+    touchgfx::TextAreaWithOneWildcard taLblAnt1;
+    touchgfx::TextAreaWithOneWildcard taLblAnt2;
+    touchgfx::TextAreaWithOneWildcard taAnt1;
+    touchgfx::TextAreaWithOneWildcard taAnt2;
+    touchgfx::TextAreaWithOneWildcard taStatus;
+    touchgfx::TextAreaWithOneWildcard taBtnConnect;
+    touchgfx::TextAreaWithOneWildcard taBtnStart;
+    touchgfx::TextAreaWithOneWildcard taBtnStop;
 
     /*
      * Wildcard Buffers
      */
-    static const uint16_t TEXTAREAEPC_SIZE = 64;
-    touchgfx::Unicode::UnicodeChar textAreaEpcBuffer[TEXTAREAEPC_SIZE];
+    static const uint16_t TALBLANT1_SIZE = 16;
+    touchgfx::Unicode::UnicodeChar taLblAnt1Buffer[TALBLANT1_SIZE];
+    static const uint16_t TALBLANT2_SIZE = 16;
+    touchgfx::Unicode::UnicodeChar taLblAnt2Buffer[TALBLANT2_SIZE];
+    static const uint16_t TAANT1_SIZE = 64;
+    touchgfx::Unicode::UnicodeChar taAnt1Buffer[TAANT1_SIZE];
+    static const uint16_t TAANT2_SIZE = 64;
+    touchgfx::Unicode::UnicodeChar taAnt2Buffer[TAANT2_SIZE];
+    static const uint16_t TASTATUS_SIZE = 64;
+    touchgfx::Unicode::UnicodeChar taStatusBuffer[TASTATUS_SIZE];
+    static const uint16_t TABTNCONNECT_SIZE = 16;
+    touchgfx::Unicode::UnicodeChar taBtnConnectBuffer[TABTNCONNECT_SIZE];
+    static const uint16_t TABTNSTART_SIZE = 16;
+    touchgfx::Unicode::UnicodeChar taBtnStartBuffer[TABTNSTART_SIZE];
+    static const uint16_t TABTNSTOP_SIZE = 16;
+    touchgfx::Unicode::UnicodeChar taBtnStopBuffer[TABTNSTOP_SIZE];
 
 private:
 

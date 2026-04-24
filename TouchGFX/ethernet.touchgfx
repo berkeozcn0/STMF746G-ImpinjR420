@@ -5,22 +5,232 @@
         "Name": "Screen1",
         "Components": [
           {
+            "Type": "Box",
+            "Name": "bgBtnStop",
+            "X": 352,
+            "Y": 176,
+            "Width": 128,
+            "Height": 37,
+            "Color": {
+              "Red": 255,
+              "Blue": 8
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "bgBtnStart",
+            "X": 352,
+            "Y": 113,
+            "Width": 128,
+            "Height": 37,
+            "Color": {
+              "Red": 4,
+              "Green": 255
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "bgBtnConnect",
+            "X": 352,
+            "Y": 40,
+            "Width": 128,
+            "Height": 37,
+            "Color": {
+              "Green": 145,
+              "Blue": 255
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "bgStatus",
+            "Y": 235,
+            "Width": 480,
+            "Height": 37,
+            "Color": {
+              "Red": 189,
+              "Green": 163,
+              "Blue": 36
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "bgAnt2",
+            "Y": 111,
+            "Width": 319,
+            "Height": 102,
+            "Color": {
+              "Green": 102,
+              "Blue": 48
+            }
+          },
+          {
+            "Type": "Box",
+            "Name": "bgAnt1",
+            "Width": 319,
+            "Height": 102,
+            "Color": {
+              "Green": 52,
+              "Blue": 130
+            }
+          },
+          {
             "Type": "TextArea",
-            "Name": "textAreaEpc",
-            "X": -3,
-            "Y": 76,
-            "Width": 483,
-            "Height": 120,
-            "TextId": "textAreaEpc",
+            "Name": "taLblAnt1",
+            "Width": 89,
+            "Height": 24,
+            "TextId": "__SingleUse_B04Z",
             "TextRotation": "0",
             "Color": {
-              "Red": 255
+              "Red": 125,
+              "Green": 227,
+              "Blue": 255
             },
             "AutoSize": true,
             "Wildcard1": {
-              "TextId": "__SingleUse_VC65",
+              "TextId": "__SingleUse_U6QG",
+              "UseBuffer": true,
+              "BufferSize": 16
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "taLblAnt2",
+            "Y": 113,
+            "Width": 89,
+            "Height": 24,
+            "TextId": "__SingleUse_8D99",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 125,
+              "Green": 227,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_MSFS",
+              "UseBuffer": true,
+              "BufferSize": 16
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "taAnt1",
+            "Y": 40,
+            "Width": 319,
+            "Height": 18,
+            "TextId": "__SingleUse_WMU1",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_AI8Q",
               "UseBuffer": true,
               "BufferSize": 64
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "taAnt2",
+            "Y": 150,
+            "Width": 316,
+            "Height": 18,
+            "TextId": "__SingleUse_FBK1",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 212,
+              "Green": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_PP16",
+              "UseBuffer": true,
+              "BufferSize": 64
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "taStatus",
+            "Y": 241,
+            "Width": 478,
+            "Height": 24,
+            "TextId": "__SingleUse_XSAU",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_VOME",
+              "UseBuffer": true,
+              "BufferSize": 64
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "taBtnConnect",
+            "X": 373,
+            "Y": 46,
+            "Width": 84,
+            "Height": 24,
+            "TextId": "__SingleUse_KKQK",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_L4YU",
+              "UseBuffer": true,
+              "BufferSize": 16
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "taBtnStart",
+            "X": 376,
+            "Y": 119,
+            "Width": 78,
+            "Height": 24,
+            "TextId": "__SingleUse_WFFQ",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_F693",
+              "UseBuffer": true,
+              "BufferSize": 16
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "taBtnStop",
+            "X": 371,
+            "Y": 182,
+            "Width": 88,
+            "Height": 24,
+            "TextId": "__SingleUse_9C06",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_D4WM",
+              "UseBuffer": true,
+              "BufferSize": 16
             }
           }
         ],

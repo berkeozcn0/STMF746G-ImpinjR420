@@ -6,8 +6,56 @@
   <Texts>
     <TextGroup Id="Group1" />
     <TextGroup Id="Unsorted">
-      <Text Id="__SingleUse_VC65" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">EPC: Bekleniyor...</Translation>
+      <Text Id="__SingleUse_D4WM" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">DURDUR</Translation>
+      </Text>
+      <Text Id="__SingleUse_F693" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">BASLAT</Translation>
+      </Text>
+      <Text Id="__SingleUse_L4YU" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">BAGLAN</Translation>
+      </Text>
+      <Text Id="__SingleUse_VOME" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">HAZIR</Translation>
+      </Text>
+      <Text Id="__SingleUse_PP16" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">-------------</Translation>
+      </Text>
+      <Text Id="__SingleUse_MSFS" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">ANTEN 2</Translation>
+      </Text>
+      <Text Id="__SingleUse_AI8Q" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">------------ </Translation>
+      </Text>
+      <Text Id="__SingleUse_U6QG" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">ANTEN 1</Translation>
+      </Text>
+      <Text Id="__SingleUse_B04Z" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_9C06" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_WFFQ" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_KKQK" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_XSAU" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">&lt;value&gt;                                                           </Translation>
+      </Text>
+      <Text Id="__SingleUse_FBK1" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">&lt;value&gt;                                             </Translation>
+      </Text>
+      <Text Id="__SingleUse_WMU1" Alignment="Left" TypographyId="Small">
+        <Translation Language="GB">&lt;value&gt;                                              </Translation>
+      </Text>
+      <Text Id="__SingleUse_8D99" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="taLblAnt1" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">New Text</Translation>
       </Text>
       <Text Id="textAreaEpc" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">   &lt;value&gt;          &#10;                                                  &#10;&#10;                                                    &#10;                                                                     </Translation>
@@ -17,6 +65,6 @@
   <Typographies>
     <Typography Id="Default" Font="verdana.ttf" Size="20" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789: " />
     <Typography Id="Large" Font="verdana.ttf" Size="40" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
-    <Typography Id="Small" Font="verdana.ttf" Size="10" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="Small" Font="verdana.ttf" Size="15" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacters="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789: " />
   </Typographies>
 </TextDatabase>

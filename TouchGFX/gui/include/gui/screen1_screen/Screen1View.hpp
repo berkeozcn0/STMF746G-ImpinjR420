@@ -3,6 +3,7 @@
 
 #include <gui_generated/screen1_screen/Screen1ViewBase.hpp>
 #include <gui/screen1_screen/Screen1Presenter.hpp>
+#include <touchgfx/events/ClickEvent.hpp>
 
 class Screen1View : public Screen1ViewBase
 {
@@ -12,13 +13,10 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    /**
-     * Presenter'dan gelen EPC verisini almak için bu fonksiyonu ekliyoruz.
-     * Bu sayede Presenter'daki "view.updateEpcText(epc)" çağrısı derlenebilecek.
-     */
-    virtual void updateEpcText(char* epc);
-
-protected:
+    virtual void updateAntenna1Epc(char* epc);
+    virtual void updateAntenna2Epc(char* epc);
+    virtual void updateStatusText(char* status);
+    virtual void handleClickEvent(const touchgfx::ClickEvent& evt);
 };
 
 #endif // SCREEN1VIEW_HPP

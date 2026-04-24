@@ -7,13 +7,9 @@ class Model
 {
 public:
     Model();
-
-    void bind(ModelListener* listener)
-    {
-        modelListener = listener;
-    }
-
+    void bind(ModelListener* listener) { modelListener = listener; }
     void tick();
+    void sendCommand(unsigned char cmd);
 protected:
     ModelListener* modelListener;
 };
