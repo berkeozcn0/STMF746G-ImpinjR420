@@ -1,0 +1,11 @@
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:12:18:virtual void ModelListener::updateAntenna1Epc(char*)	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:13:18:virtual void ModelListener::updateAntenna2Epc(char*)	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:14:18:virtual void ModelListener::updateStatusText(char*)	0	static
+../../TouchGFX/gui/include/gui/screen2_screen/Screen2Presenter.hpp:33:13:Screen2Presenter::~Screen2Presenter()	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen2_screen/Screen2Presenter.cpp:10:6:virtual void Screen2Presenter::activate()	0	static
+../../TouchGFX/gui/include/gui/screen2_screen/Screen2Presenter.hpp:33:13:virtual Screen2Presenter::~Screen2Presenter()	8	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen2_screen/Screen2Presenter.cpp:20:6:virtual void Screen2Presenter::updateAnt1List()	0	static
+../../TouchGFX/gui/include/gui/screen2_screen/Screen2Presenter.hpp:33:13:virtual void* Screen2Presenter::_ZThn4_N16Screen2PresenterD1Ev()	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen2_screen/Screen2Presenter.cpp:4:1:Screen2Presenter::Screen2Presenter(Screen2View&)	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen2_screen/Screen2Presenter.cpp:25:22:const Ant1EpcRecord* Screen2Presenter::getAnt1EpcList() const	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen2_screen/Screen2Presenter.cpp:30:9:uint8_t Screen2Presenter::getAnt1EpcCount() const	0	static

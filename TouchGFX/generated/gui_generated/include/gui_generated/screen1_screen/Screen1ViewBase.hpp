@@ -9,6 +9,7 @@
 #include <gui/screen1_screen/Screen1Presenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/TextAreaWithWildcard.hpp>
+#include <touchgfx/widgets/ButtonWithLabel.hpp>
 
 class Screen1ViewBase : public touchgfx::View<Screen1Presenter>
 {
@@ -40,6 +41,7 @@ protected:
     touchgfx::TextAreaWithOneWildcard taBtnConnect;
     touchgfx::TextAreaWithOneWildcard taBtnStart;
     touchgfx::TextAreaWithOneWildcard taBtnStop;
+    touchgfx::ButtonWithLabel buttonWithLabel1;
 
     /*
      * Wildcard Buffers
@@ -62,6 +64,16 @@ protected:
     touchgfx::Unicode::UnicodeChar taBtnStopBuffer[TABTNSTOP_SIZE];
 
 private:
+
+    /*
+     * Callback Declarations
+     */
+    touchgfx::Callback<Screen1ViewBase, const touchgfx::AbstractButton&> buttonCallback;
+
+    /*
+     * Callback Handler Declarations
+     */
+    void buttonCallbackHandler(const touchgfx::AbstractButton& src);
 
 };
 

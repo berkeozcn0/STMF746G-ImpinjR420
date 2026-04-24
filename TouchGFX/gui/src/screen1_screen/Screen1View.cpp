@@ -36,6 +36,10 @@ void Screen1View::updateStatusText(char* status)
 
 void Screen1View::handleClickEvent(const touchgfx::ClickEvent& evt)
 {
+    // Orijinal TouchGFX widget (buton vs) tıklamalarının çalışması için 
+    // base fonksiyonu HER DURUMDA çağırmalıyız:
+    Screen1ViewBase::handleClickEvent(evt);
+
     if (evt.getType() != touchgfx::ClickEvent::RELEASED) return;
 
     int x = evt.getX(), y = evt.getY();

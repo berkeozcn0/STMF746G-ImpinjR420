@@ -89,7 +89,8 @@ typedef struct
 {
     char    hexString[60];
     uint8_t antennaId;   /* 1 veya 2 */
-    uint8_t _pad[3];
+    int8_t  peakRssi;    /* YENI: Anten rssi gucu */
+    uint8_t _pad[2];     /* Toplam 64 byte icin */
 } EpcData;
 
 typedef struct
@@ -146,8 +147,8 @@ static void send_status_ui(const char *m)
         osMessageQueuePut(statusQueueHandle, &s, 0, 0);
 }
 
-/* EPC verisini antenna ID ile epcQueueHandle'a gönderir */
-static void send_epc_with_ant(const uint8_t *epc, uint8_t len, uint8_t antId)
+/* EPC verisini antenna ID ve RSSI ile epcQueueHandle'a gönderir */
+static void send_epc_with_ant(const uint8_t *epc, uint8_t len, uint8_t antId, int8_t rssi)
 {
     EpcData d;
     uint8_t i;
@@ -159,6 +160,7 @@ static void send_epc_with_ant(const uint8_t *epc, uint8_t len, uint8_t antId)
         snprintf(&d.hexString[4 + (i * 2)], 3, "%02X", epc[i]);
 
     d.antennaId = antId;
+    d.peakRssi = rssi;
 
     if (epcQueueHandle != NULL)
         osMessageQueuePut(epcQueueHandle, &d, 0, 0);
@@ -266,7 +268,7 @@ static int build_add_rospec(uint8_t *frame, uint32_t msg_id, uint32_t rospec_id)
     /* TagReportContentSelector @69, len=6 */
     /* len = 4(hdr)+2(bit fields) = 6 */
     write_tlv_header(frame + 69, LLRP_PARAM_TAGREPORTCONTENTSELECTOR, 6);
-    WRITE_U16_BE(frame + 73, 0x1000);       /* Bit12=EnableAntennaID → Anten 1/2 ayrımı için */
+    WRITE_U16_BE(frame + 73, 0x1400);       /* Bit12=EnableAntennaID, Bit10=EnablePeakRSSI */
 
     return 75;
 }
@@ -463,6 +465,7 @@ static void parse_tag_report_data(const uint8_t *data, uint32_t len)
     const uint8_t *ptr = data;
     const uint8_t *end = data + len;
     uint8_t  antenna_id = 0;
+    int8_t   peak_rssi = 0;
     uint8_t  epc_buf[24];
     uint8_t  epc_len = 0;
     uint8_t  has_epc = 0;
@@ -478,6 +481,12 @@ static void parse_tag_report_data(const uint8_t *data, uint32_t len)
                 if ((ptr + 3) <= end)
                     antenna_id = (uint8_t)(READ_U16_BE(ptr + 1) & 0xFF);
                 ptr += 3;
+            }
+            else if (tv_type == 6) /* PeakRSSI: 1+1=2 byte */
+            {
+                if ((ptr + 2) <= end)
+                    peak_rssi = (int8_t)(ptr[1]);
+                ptr += 2;
             }
             else if (tv_type == LLRP_TV_EPC_96) /* EPC_96: 1+12=13 byte */
             {
@@ -523,7 +532,7 @@ static void parse_tag_report_data(const uint8_t *data, uint32_t len)
     }
 
     if (has_epc)
-        send_epc_with_ant(epc_buf, epc_len, antenna_id);
+        send_epc_with_ant(epc_buf, epc_len, antenna_id, peak_rssi);
 }
 
 /*

@@ -8,7 +8,7 @@
             "Type": "Box",
             "Name": "bgBtnStop",
             "X": 352,
-            "Y": 176,
+            "Y": 118,
             "Width": 128,
             "Height": 37,
             "Color": {
@@ -20,7 +20,7 @@
             "Type": "Box",
             "Name": "bgBtnStart",
             "X": 352,
-            "Y": 113,
+            "Y": 58,
             "Width": 128,
             "Height": 37,
             "Color": {
@@ -32,7 +32,7 @@
             "Type": "Box",
             "Name": "bgBtnConnect",
             "X": 352,
-            "Y": 40,
+            "Y": 3,
             "Width": 128,
             "Height": 37,
             "Color": {
@@ -173,8 +173,8 @@
           {
             "Type": "TextArea",
             "Name": "taBtnConnect",
-            "X": 373,
-            "Y": 46,
+            "X": 375,
+            "Y": 9,
             "Width": 84,
             "Height": 24,
             "TextId": "__SingleUse_KKQK",
@@ -194,8 +194,8 @@
           {
             "Type": "TextArea",
             "Name": "taBtnStart",
-            "X": 376,
-            "Y": 119,
+            "X": 378,
+            "Y": 64,
             "Width": 78,
             "Height": 24,
             "TextId": "__SingleUse_WFFQ",
@@ -215,8 +215,8 @@
           {
             "Type": "TextArea",
             "Name": "taBtnStop",
-            "X": 371,
-            "Y": 182,
+            "X": 373,
+            "Y": 124,
             "Width": 88,
             "Height": 24,
             "TextId": "__SingleUse_9C06",
@@ -232,12 +232,176 @@
               "UseBuffer": true,
               "BufferSize": 16
             }
+          },
+          {
+            "Type": "ButtonWithLabel",
+            "Name": "buttonWithLabel1",
+            "X": 361,
+            "Y": 168,
+            "Width": 110,
+            "Height": 50,
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
+            "TextId": "__SingleUse_DMFF",
+            "ReleasedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "PressedColor": {
+              "Red": 194,
+              "Green": 12,
+              "Blue": 12
+            },
+            "TextRotation": "0"
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "buttonWithLabel1"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen2"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Screen2",
+        "Components": [
+          {
+            "Type": "Box",
+            "Name": "box1",
+            "Width": 480,
+            "Height": 272,
+            "Color": {
+              "Green": 95,
+              "Blue": 135
+            },
+            "Alpha": 177
+          },
+          {
+            "Type": "ButtonWithLabel",
+            "Name": "buttonWithLabel2",
+            "X": -14,
+            "Y": 235,
+            "Width": 110,
+            "Height": 50,
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
+            "TextId": "__SingleUse_WBPP",
+            "ReleasedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "PressedColor": {
+              "Red": 194,
+              "Green": 12,
+              "Blue": 12
+            },
+            "TextRotation": "0"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea1",
+            "Width": 82,
+            "Height": 24,
+            "TextId": "__SingleUse_SPHK",
+            "TextRotation": "0",
+            "Color": {
+              "Green": 255,
+              "Blue": 247
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "ScrollList",
+            "Name": "scrollListAnt1",
+            "X": 41,
+            "Y": 39,
+            "Width": 400,
+            "Height": 181,
+            "ItemTemplateName": "EpcListItem",
+            "NumberofItems": 20,
+            "Easing": "Back",
+            "EasingOption": "Out",
+            "SwipeAcceleration": 1.0,
+            "DragAcceleration": 1.0,
+            "OverShootPercentage": 75
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "buttonWithLabel2"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "West",
+              "ActionComponent": "Screen1"
+            }
+          }
+        ]
+      }
+    ],
+    "CustomContainerDefinitions": [
+      {
+        "Name": "EpcListItem",
+        "Width": 400,
+        "Height": 30,
+        "Components": [
+          {
+            "Type": "TextArea",
+            "Name": "textEpc",
+            "Y": 6,
+            "Width": 293,
+            "Height": 18,
+            "TextId": "__SingleUse_J4VJ",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 30,
+              "Green": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_7TWA",
+              "UseBuffer": true,
+              "BufferSize": 64
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textRssi",
+            "X": 304,
+            "Y": 6,
+            "Width": 96,
+            "Height": 18,
+            "TextId": "__SingleUse_BAAI",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_DBH2",
+              "UseBuffer": true,
+              "BufferSize": 16
+            }
           }
         ],
         "Interactions": []
       }
     ],
-    "CustomContainerDefinitions": [],
     "Name": "ethernet",
     "Resolution": {
       "Width": 480,

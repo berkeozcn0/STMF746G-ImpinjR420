@@ -4,22 +4,24 @@
 #include <gui_generated/screen1_screen/Screen1ViewBase.hpp>
 #include <touchgfx/Color.hpp>
 #include <texts/TextKeysAndLanguages.hpp>
+#include <images/BitmapDatabase.hpp>
 
-Screen1ViewBase::Screen1ViewBase()
+Screen1ViewBase::Screen1ViewBase() :
+    buttonCallback(this, &Screen1ViewBase::buttonCallbackHandler)
 {
     __background.setPosition(0, 0, 480, 272);
     __background.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
     add(__background);
 
-    bgBtnStop.setPosition(352, 176, 128, 37);
+    bgBtnStop.setPosition(352, 118, 128, 37);
     bgBtnStop.setColor(touchgfx::Color::getColorFromRGB(255, 0, 8));
     add(bgBtnStop);
 
-    bgBtnStart.setPosition(352, 113, 128, 37);
+    bgBtnStart.setPosition(352, 58, 128, 37);
     bgBtnStart.setColor(touchgfx::Color::getColorFromRGB(4, 255, 0));
     add(bgBtnStart);
 
-    bgBtnConnect.setPosition(352, 40, 128, 37);
+    bgBtnConnect.setPosition(352, 3, 128, 37);
     bgBtnConnect.setColor(touchgfx::Color::getColorFromRGB(0, 145, 255));
     add(bgBtnConnect);
 
@@ -80,7 +82,7 @@ Screen1ViewBase::Screen1ViewBase()
     taStatus.setTypedText(touchgfx::TypedText(T___SINGLEUSE_XSAU));
     add(taStatus);
 
-    taBtnConnect.setXY(373, 46);
+    taBtnConnect.setXY(375, 9);
     taBtnConnect.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     taBtnConnect.setLinespacing(0);
     Unicode::snprintf(taBtnConnectBuffer, TABTNCONNECT_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_L4YU).getText());
@@ -89,7 +91,7 @@ Screen1ViewBase::Screen1ViewBase()
     taBtnConnect.setTypedText(touchgfx::TypedText(T___SINGLEUSE_KKQK));
     add(taBtnConnect);
 
-    taBtnStart.setXY(376, 119);
+    taBtnStart.setXY(378, 64);
     taBtnStart.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     taBtnStart.setLinespacing(0);
     Unicode::snprintf(taBtnStartBuffer, TABTNSTART_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_F693).getText());
@@ -98,7 +100,7 @@ Screen1ViewBase::Screen1ViewBase()
     taBtnStart.setTypedText(touchgfx::TypedText(T___SINGLEUSE_WFFQ));
     add(taBtnStart);
 
-    taBtnStop.setXY(371, 182);
+    taBtnStop.setXY(373, 124);
     taBtnStop.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     taBtnStop.setLinespacing(0);
     Unicode::snprintf(taBtnStopBuffer, TABTNSTOP_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_D4WM).getText());
@@ -106,6 +108,14 @@ Screen1ViewBase::Screen1ViewBase()
     taBtnStop.resizeToCurrentText();
     taBtnStop.setTypedText(touchgfx::TypedText(T___SINGLEUSE_9C06));
     add(taBtnStop);
+
+    buttonWithLabel1.setXY(361, 168);
+    buttonWithLabel1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_TINY_ROUND_ACTION_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_TINY_ROUND_ACTION_ID));
+    buttonWithLabel1.setLabelText(touchgfx::TypedText(T___SINGLEUSE_DMFF));
+    buttonWithLabel1.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    buttonWithLabel1.setLabelColorPressed(touchgfx::Color::getColorFromRGB(194, 12, 12));
+    buttonWithLabel1.setAction(buttonCallback);
+    add(buttonWithLabel1);
 }
 
 Screen1ViewBase::~Screen1ViewBase()
@@ -116,4 +126,15 @@ Screen1ViewBase::~Screen1ViewBase()
 void Screen1ViewBase::setupScreen()
 {
 
+}
+
+void Screen1ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
+{
+    if (&src == &buttonWithLabel1)
+    {
+        //Interaction1
+        //When buttonWithLabel1 clicked change screen to Screen2
+        //Go to Screen2 with screen transition towards East
+        application().gotoScreen2ScreenSlideTransitionEast();
+    }
 }
