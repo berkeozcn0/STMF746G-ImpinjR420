@@ -1,6 +1,7 @@
 ../../TouchGFX/gui/include/gui/model/ModelListener.hpp:12:18:virtual void ModelListener::updateAntenna1Epc(char*)	1
 ../../TouchGFX/gui/include/gui/model/ModelListener.hpp:13:18:virtual void ModelListener::updateAntenna2Epc(char*)	1
 ../../TouchGFX/gui/include/gui/model/ModelListener.hpp:14:18:virtual void ModelListener::updateStatusText(char*)	1
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:16:18:virtual void ModelListener::updateAnt2List()	1
 ../../TouchGFX/gui/include/gui/screen2_screen/Screen2Presenter.hpp:33:13:Screen2Presenter::~Screen2Presenter()	1
 C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen2_screen/Screen2Presenter.cpp:10:6:virtual void Screen2Presenter::activate()	1
 ../../TouchGFX/gui/include/gui/screen2_screen/Screen2Presenter.hpp:33:13:virtual Screen2Presenter::~Screen2Presenter()	1

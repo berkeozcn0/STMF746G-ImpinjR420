@@ -13,6 +13,7 @@ public:
     virtual void updateAntenna2Epc(char* epc) {}
     virtual void updateStatusText(char* status) {}
     virtual void updateAnt1List() {}
+    virtual void updateAnt2List() {}
 
     void bind(Model* m) { model = m; }
 protected:

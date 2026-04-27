@@ -8,10 +8,11 @@
 #include <mvp/View.hpp>
 #include <gui/screen2_screen/Screen2Presenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
-#include <touchgfx/widgets/ButtonWithLabel.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
 #include <touchgfx/containers/scrollers/ScrollList.hpp>
 #include <gui/containers/EpcListItem.hpp>
+#include <touchgfx/widgets/Button.hpp>
+#include <touchgfx/widgets/ScalableImage.hpp>
 
 class Screen2ViewBase : public touchgfx::View<Screen2Presenter>
 {
@@ -35,10 +36,12 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Box box1;
-    touchgfx::ButtonWithLabel buttonWithLabel2;
     touchgfx::TextArea textArea1;
     touchgfx::ScrollList scrollListAnt1;
     touchgfx::DrawableListItems<EpcListItem, 7> scrollListAnt1ListItems;
+    touchgfx::Button button1;
+    touchgfx::Button button2;
+    touchgfx::ScalableImage scalableImage1;
 
 private:
 

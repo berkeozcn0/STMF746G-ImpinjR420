@@ -234,26 +234,25 @@
             }
           },
           {
-            "Type": "ButtonWithLabel",
-            "Name": "buttonWithLabel1",
-            "X": 361,
-            "Y": 168,
-            "Width": 110,
-            "Height": 50,
-            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
-            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
-            "TextId": "__SingleUse_DMFF",
-            "ReleasedColor": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "PressedColor": {
-              "Red": 194,
-              "Green": 12,
-              "Blue": 12
-            },
-            "TextRotation": "0"
+            "Type": "Button",
+            "Name": "button1",
+            "X": 380,
+            "Y": 177,
+            "Width": 100,
+            "Height": 36,
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_pressed.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_active.png",
+            "Preset": "alternate_theme\\presets\\button\\regular\\height_36\\tiny_round_active.json"
+          },
+          {
+            "Type": "ScalableImage",
+            "Name": "scalableImage1",
+            "X": 401,
+            "Y": 185,
+            "Width": 58,
+            "Height": 21,
+            "Filename": "okisareti.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
           }
         ],
         "Interactions": [
@@ -261,7 +260,7 @@
             "InteractionName": "Interaction1",
             "Trigger": {
               "Type": "TriggerClicked",
-              "TriggerComponent": "buttonWithLabel1"
+              "TriggerComponent": "button1"
             },
             "Action": {
               "Type": "ActionGotoScreen",
@@ -285,28 +284,6 @@
               "Blue": 135
             },
             "Alpha": 177
-          },
-          {
-            "Type": "ButtonWithLabel",
-            "Name": "buttonWithLabel2",
-            "X": -14,
-            "Y": 235,
-            "Width": 110,
-            "Height": 50,
-            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
-            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_50_tiny_round_action.png",
-            "TextId": "__SingleUse_WBPP",
-            "ReleasedColor": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "PressedColor": {
-              "Red": 194,
-              "Green": 12,
-              "Blue": 12
-            },
-            "TextRotation": "0"
           },
           {
             "Type": "TextArea",
@@ -335,6 +312,37 @@
             "SwipeAcceleration": 1.0,
             "DragAcceleration": 1.0,
             "OverShootPercentage": 75
+          },
+          {
+            "Type": "Button",
+            "Name": "button1",
+            "X": 380,
+            "Y": 236,
+            "Width": 100,
+            "Height": 36,
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_pressed.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_active.png",
+            "Preset": "alternate_theme\\presets\\button\\regular\\height_36\\tiny_round_active.json"
+          },
+          {
+            "Type": "Button",
+            "Name": "button2",
+            "Y": 236,
+            "Width": 100,
+            "Height": 36,
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_pressed.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_active.png",
+            "Preset": "alternate_theme\\presets\\button\\regular\\height_36\\tiny_round_active.json"
+          },
+          {
+            "Type": "ScalableImage",
+            "Name": "scalableImage1",
+            "X": 400,
+            "Y": 243,
+            "Width": 60,
+            "Height": 23,
+            "Filename": "okisareti.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
           }
         ],
         "Interactions": [
@@ -342,13 +350,94 @@
             "InteractionName": "Interaction1",
             "Trigger": {
               "Type": "TriggerClicked",
-              "TriggerComponent": "buttonWithLabel2"
+              "TriggerComponent": "button1"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Screen3"
+            }
+          },
+          {
+            "InteractionName": "Interaction2",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "button2"
             },
             "Action": {
               "Type": "ActionGotoScreen",
               "ScreenTransitionType": "ScreenTransitionSlide",
               "ScreenTransitionDirection": "West",
               "ActionComponent": "Screen1"
+            }
+          }
+        ]
+      },
+      {
+        "Name": "Screen3",
+        "Components": [
+          {
+            "Type": "Box",
+            "Name": "box1",
+            "Width": 480,
+            "Height": 272,
+            "Color": {
+              "Green": 59
+            },
+            "Alpha": 201
+          },
+          {
+            "Type": "TextArea",
+            "Name": "textArea1",
+            "Width": 82,
+            "Height": 24,
+            "TextId": "__SingleUse_3KI6",
+            "TextRotation": "0",
+            "Color": {
+              "Green": 234,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "Button",
+            "Name": "button1",
+            "Y": 236,
+            "Width": 100,
+            "Height": 36,
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_pressed.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_36_tiny_round_active.png",
+            "Preset": "alternate_theme\\presets\\button\\regular\\height_36\\tiny_round_active.json"
+          },
+          {
+            "Type": "ScrollList",
+            "Name": "scrollListAnt2",
+            "X": 41,
+            "Y": 30,
+            "Width": 400,
+            "Height": 199,
+            "ItemTemplateName": "EpcListItem",
+            "NumberofItems": 20,
+            "Easing": "Back",
+            "EasingOption": "Out",
+            "SwipeAcceleration": 1.0,
+            "DragAcceleration": 1.0,
+            "OverShootPercentage": 75
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "Trigger": {
+              "Type": "TriggerClicked",
+              "TriggerComponent": "button1"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionSlide",
+              "ScreenTransitionDirection": "West",
+              "ActionComponent": "Screen2"
             }
           }
         ]

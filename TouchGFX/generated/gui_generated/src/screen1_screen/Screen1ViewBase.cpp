@@ -55,7 +55,7 @@ Screen1ViewBase::Screen1ViewBase() :
     taLblAnt2.setTypedText(touchgfx::TypedText(T___SINGLEUSE_8D99));
     add(taLblAnt2);
 
-    taAnt1.setXY(0, 40);
+    taAnt1.setXY(0, 42);
     taAnt1.setColor(touchgfx::Color::getColorFromRGB(212, 255, 0));
     taAnt1.setLinespacing(0);
     Unicode::snprintf(taAnt1Buffer, TAANT1_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_AI8Q).getText());
@@ -109,13 +109,15 @@ Screen1ViewBase::Screen1ViewBase() :
     taBtnStop.setTypedText(touchgfx::TypedText(T___SINGLEUSE_9C06));
     add(taBtnStop);
 
-    buttonWithLabel1.setXY(361, 168);
-    buttonWithLabel1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_TINY_ROUND_ACTION_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_TINY_ROUND_ACTION_ID));
-    buttonWithLabel1.setLabelText(touchgfx::TypedText(T___SINGLEUSE_DMFF));
-    buttonWithLabel1.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    buttonWithLabel1.setLabelColorPressed(touchgfx::Color::getColorFromRGB(194, 12, 12));
-    buttonWithLabel1.setAction(buttonCallback);
-    add(buttonWithLabel1);
+    button1.setXY(380, 177);
+    button1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID));
+    button1.setAction(buttonCallback);
+    add(button1);
+
+    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_OKISARETI_ID));
+    scalableImage1.setPosition(401, 185, 58, 21);
+    scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+    add(scalableImage1);
 }
 
 Screen1ViewBase::~Screen1ViewBase()
@@ -130,10 +132,10 @@ void Screen1ViewBase::setupScreen()
 
 void Screen1ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    if (&src == &buttonWithLabel1)
+    if (&src == &button1)
     {
         //Interaction1
-        //When buttonWithLabel1 clicked change screen to Screen2
+        //When button1 clicked change screen to Screen2
         //Go to Screen2 with screen transition towards East
         application().gotoScreen2ScreenSlideTransitionEast();
     }

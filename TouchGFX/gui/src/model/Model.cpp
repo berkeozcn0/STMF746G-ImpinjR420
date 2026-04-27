@@ -23,7 +23,7 @@ struct StatusMsg {
     char text[64];
 };
 
-Model::Model() : modelListener(0), ant1Count(0) {}
+Model::Model() : modelListener(0), ant1Count(0), ant2Count(0) {}
 
 void Model::tick()
 {
@@ -36,6 +36,43 @@ void Model::tick()
             {
                 if (modelListener != 0)
                     modelListener->updateAntenna2Epc(epc.hexString);
+
+                // Anten 2 için listeye ekle / güncelle
+                bool found = false;
+                for (uint8_t i = 0; i < ant2Count; i++)
+                {
+                    if (strcmp(ant2List[i].epc, epc.hexString) == 0)
+                    {
+                        found = true;
+                        if (epc.peakRssi > ant2List[i].maxRssi)
+                            ant2List[i].maxRssi = epc.peakRssi;
+                        break;
+                    }
+                }
+
+                if (!found && ant2Count < MAX_EPC_COUNT)
+                {
+                    strncpy(ant2List[ant2Count].epc, epc.hexString, sizeof(ant2List[ant2Count].epc));
+                    ant2List[ant2Count].maxRssi = epc.peakRssi;
+                    ant2Count++;
+                }
+
+                // Basit Insertion Sort (Büyükten küçüğe sıralama)
+                for (int i = 1; i < ant2Count; i++)
+                {
+                    Ant1EpcRecord key = ant2List[i];
+                    int j = i - 1;
+                    while (j >= 0 && ant2List[j].maxRssi < key.maxRssi)
+                    {
+                        ant2List[j + 1] = ant2List[j];
+                        j = j - 1;
+                    }
+                    ant2List[j + 1] = key;
+                }
+
+                // Ekranı güncellemek için dinleyiciyi tetikle
+                if (modelListener != 0)
+                    modelListener->updateAnt2List();
             }
             else
             {

@@ -3,8 +3,8 @@
 /*********************************************************************************/
 #include <gui_generated/screen2_screen/Screen2ViewBase.hpp>
 #include <touchgfx/Color.hpp>
-#include <images/BitmapDatabase.hpp>
 #include <texts/TextKeysAndLanguages.hpp>
+#include <images/BitmapDatabase.hpp>
 
 Screen2ViewBase::Screen2ViewBase() :
     updateItemCallback(this, &Screen2ViewBase::updateItemCallbackHandler),
@@ -18,14 +18,6 @@ Screen2ViewBase::Screen2ViewBase() :
     box1.setColor(touchgfx::Color::getColorFromRGB(0, 95, 135));
     box1.setAlpha(177);
     add(box1);
-
-    buttonWithLabel2.setXY(-14, 235);
-    buttonWithLabel2.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_TINY_ROUND_ACTION_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_TINY_ROUND_ACTION_ID));
-    buttonWithLabel2.setLabelText(touchgfx::TypedText(T___SINGLEUSE_WBPP));
-    buttonWithLabel2.setLabelColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    buttonWithLabel2.setLabelColorPressed(touchgfx::Color::getColorFromRGB(194, 12, 12));
-    buttonWithLabel2.setAction(buttonCallback);
-    add(buttonWithLabel2);
 
     textArea1.setXY(0, 0);
     textArea1.setColor(touchgfx::Color::getColorFromRGB(0, 255, 247));
@@ -46,6 +38,21 @@ Screen2ViewBase::Screen2ViewBase() :
     scrollListAnt1.setDrawableSize(30, 0);
     scrollListAnt1.setDrawables(scrollListAnt1ListItems, updateItemCallback);
     add(scrollListAnt1);
+
+    button1.setXY(380, 236);
+    button1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID));
+    button1.setAction(buttonCallback);
+    add(button1);
+
+    button2.setXY(0, 236);
+    button2.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID));
+    button2.setAction(buttonCallback);
+    add(button2);
+
+    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_OKISARETI_ID));
+    scalableImage1.setPosition(400, 243, 60, 23);
+    scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+    add(scalableImage1);
 }
 
 Screen2ViewBase::~Screen2ViewBase()
@@ -64,10 +71,17 @@ void Screen2ViewBase::setupScreen()
 
 void Screen2ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    if (&src == &buttonWithLabel2)
+    if (&src == &button1)
     {
         //Interaction1
-        //When buttonWithLabel2 clicked change screen to Screen1
+        //When button1 clicked change screen to Screen3
+        //Go to Screen3 with screen transition towards East
+        application().gotoScreen3ScreenSlideTransitionEast();
+    }
+    if (&src == &button2)
+    {
+        //Interaction2
+        //When button2 clicked change screen to Screen1
         //Go to Screen1 with screen transition towards West
         application().gotoScreen1ScreenSlideTransitionWest();
     }
