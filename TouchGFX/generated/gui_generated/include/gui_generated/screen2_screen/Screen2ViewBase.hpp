@@ -11,8 +11,8 @@
 #include <touchgfx/widgets/TextArea.hpp>
 #include <touchgfx/containers/scrollers/ScrollList.hpp>
 #include <gui/containers/EpcListItem.hpp>
-#include <touchgfx/widgets/Button.hpp>
-#include <touchgfx/widgets/ScalableImage.hpp>
+#include <touchgfx/widgets/ButtonWithIcon.hpp>
+#include <touchgfx/widgets/Image.hpp>
 
 class Screen2ViewBase : public touchgfx::View<Screen2Presenter>
 {
@@ -39,9 +39,10 @@ protected:
     touchgfx::TextArea textArea1;
     touchgfx::ScrollList scrollListAnt1;
     touchgfx::DrawableListItems<EpcListItem, 7> scrollListAnt1ListItems;
-    touchgfx::Button button1;
-    touchgfx::Button button2;
-    touchgfx::ScalableImage scalableImage1;
+    touchgfx::ButtonWithIcon onClearButtonClicked;
+    touchgfx::Image image1;
+    touchgfx::ButtonWithIcon buttonWithIcon1;
+    touchgfx::ButtonWithIcon buttonWithIcon1_1;
 
 private:
 

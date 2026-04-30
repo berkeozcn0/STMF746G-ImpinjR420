@@ -10,6 +10,8 @@ class ModelListener;
 struct Ant1EpcRecord {
     char epc[60];
     int8_t maxRssi;
+    uint16_t seenCount;
+    int16_t phaseAngle;
 };
 
 class Model
@@ -25,6 +27,9 @@ public:
 
     const Ant1EpcRecord* getAnt2EpcList() const { return ant2List; }
     uint8_t getAnt2EpcCount() const { return ant2Count; }
+
+    void clearAnt1List();
+    void clearAnt2List();
 
 protected:
     ModelListener* modelListener;

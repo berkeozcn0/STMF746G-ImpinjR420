@@ -29,6 +29,7 @@ public:
 
     const Ant1EpcRecord* getAnt1EpcList() const;
     uint8_t getAnt1EpcCount() const;
+    void clearList();
 
     virtual ~Screen2Presenter() {}
 

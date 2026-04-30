@@ -16,6 +16,8 @@ public:
     void updateAnt1List();
 
 protected:
+    touchgfx::Callback<Screen2View, const touchgfx::AbstractButton&> clearButtonCallback;
+    void clearButtonClicked(const touchgfx::AbstractButton& src);
 };
 
 #endif // SCREEN2VIEW_HPP

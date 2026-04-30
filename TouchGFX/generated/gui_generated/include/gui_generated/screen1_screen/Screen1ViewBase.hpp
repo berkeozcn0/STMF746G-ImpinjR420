@@ -9,8 +9,7 @@
 #include <gui/screen1_screen/Screen1Presenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/TextAreaWithWildcard.hpp>
-#include <touchgfx/widgets/Button.hpp>
-#include <touchgfx/widgets/ScalableImage.hpp>
+#include <touchgfx/widgets/ButtonWithIcon.hpp>
 
 class Screen1ViewBase : public touchgfx::View<Screen1Presenter>
 {
@@ -42,8 +41,7 @@ protected:
     touchgfx::TextAreaWithOneWildcard taBtnConnect;
     touchgfx::TextAreaWithOneWildcard taBtnStart;
     touchgfx::TextAreaWithOneWildcard taBtnStop;
-    touchgfx::Button button1;
-    touchgfx::ScalableImage scalableImage1;
+    touchgfx::ButtonWithIcon buttonWithIcon1;
 
     /*
      * Wildcard Buffers

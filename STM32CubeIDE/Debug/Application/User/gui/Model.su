@@ -1,3 +1,5 @@
 C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/model/Model.cpp:26:1:Model::Model()	0	static
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/model/Model.cpp:28:6:void Model::tick()	176	static
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/model/Model.cpp:133:6:void Model::sendCommand(unsigned char)	16	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/model/Model.cpp:28:6:void Model::tick()	184	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/model/Model.cpp:141:6:void Model::sendCommand(unsigned char)	16	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/model/Model.cpp:147:6:void Model::clearAnt1List()	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/model/Model.cpp:154:6:void Model::clearAnt2List()	0	static

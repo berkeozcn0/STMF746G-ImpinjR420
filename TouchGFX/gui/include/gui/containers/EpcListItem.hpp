@@ -11,7 +11,7 @@ public:
 
     virtual void initialize();
 
-    void setEpcAndRssi(const char* epc, int8_t rssi);
+    void setEpcDetails(const char* epc, int8_t rssi, uint16_t count, int16_t phase);
 protected:
 };
 

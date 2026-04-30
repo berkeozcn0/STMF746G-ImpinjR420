@@ -1,6 +1,7 @@
 #include <gui/screen2_screen/Screen2View.hpp>
 
-Screen2View::Screen2View()
+Screen2View::Screen2View() :
+    clearButtonCallback(this, &Screen2View::clearButtonClicked)
 {
 
 }
@@ -8,6 +9,7 @@ Screen2View::Screen2View()
 void Screen2View::setupScreen()
 {
     Screen2ViewBase::setupScreen();
+    onClearButtonClicked.setAction(clearButtonCallback);
 }
 
 void Screen2View::tearDownScreen()
@@ -28,6 +30,14 @@ void Screen2View::scrollListAnt1UpdateItem(EpcListItem& item, int16_t itemIndex)
     if (itemIndex >= 0 && itemIndex < count)
     {
         const Ant1EpcRecord* list = presenter->getAnt1EpcList();
-        item.setEpcAndRssi(list[itemIndex].epc, list[itemIndex].maxRssi);
+        item.setEpcDetails(list[itemIndex].epc, list[itemIndex].maxRssi, list[itemIndex].seenCount, list[itemIndex].phaseAngle);
+    }
+}
+
+void Screen2View::clearButtonClicked(const touchgfx::AbstractButton& src)
+{
+    if (&src == &onClearButtonClicked)
+    {
+        presenter->clearList();
     }
 }

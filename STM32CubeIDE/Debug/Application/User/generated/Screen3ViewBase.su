@@ -22,7 +22,7 @@
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:357:8:touchgfx::Callback<Screen3ViewBase, const touchgfx::AbstractButton&>::~Callback()	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:218:8:touchgfx::Callback<Screen3ViewBase, touchgfx::DrawableListItemsInterface*, short int, short int>::~Callback()	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/containers/scrollers/DrawableList.hpp:79:7:touchgfx::DrawableListItems<EpcListItem, 8>::~DrawableListItems()	16	static
-C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:48:1:Screen3ViewBase::~Screen3ViewBase()	8	static
+C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:54:1:Screen3ViewBase::~Screen3ViewBase()	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:386:18:void touchgfx::Callback<dest_type, T1, void, void>::execute(T1) [with dest_type = Screen3ViewBase; T1 = const touchgfx::AbstractButton&]	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:396:18:bool touchgfx::Callback<dest_type, T1, void, void>::isValid() const [with dest_type = Screen3ViewBase; T1 = const touchgfx::AbstractButton&]	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:250:18:void touchgfx::Callback<dest_type, T1, T2, T3>::execute(T1, T2, T3) [with dest_type = Screen3ViewBase; T1 = touchgfx::DrawableListItemsInterface*; T2 = short int; T3 = short int]	16	static
@@ -32,15 +32,14 @@ C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:218:8:virtual touchgfx::Callback<Screen3ViewBase, touchgfx::DrawableListItemsInterface*, short int, short int>::~Callback()	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:357:8:virtual touchgfx::Callback<Screen3ViewBase, const touchgfx::AbstractButton&>::~Callback()	8	static
 ../../Middlewares/ST/touchgfx/framework/include/mvp/View.hpp:36:7:virtual touchgfx::View<Screen3Presenter>::~View()	8	static
-C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:48:1:virtual Screen3ViewBase::~Screen3ViewBase()	8	static
-C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:53:6:virtual void Screen3ViewBase::setupScreen()	16	static
+C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:54:1:virtual Screen3ViewBase::~Screen3ViewBase()	8	static
+C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:59:6:virtual void Screen3ViewBase::setupScreen()	16	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:121:18:virtual void touchgfx::Drawable::invalidateContent() const	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/containers/scrollers/DrawableList.hpp:82:23:touchgfx::Drawable* touchgfx::DrawableListItems<TYPE, SIZE>::getDrawable(int16_t) [with TYPE = EpcListItem; int SIZE = 8]	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Widget.hpp:45:18:virtual void touchgfx::Widget::getLastChild(int16_t, int16_t, touchgfx::Drawable**)	0	static
-C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:62:6:void Screen3ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton&)	8	static
-C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:73:6:void Screen3ViewBase::updateItemCallbackHandler(touchgfx::DrawableListItemsInterface*, int16_t, int16_t)	16	static
+C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:68:6:void Screen3ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton&)	8	static
+C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:79:6:void Screen3ViewBase::updateItemCallbackHandler(touchgfx::DrawableListItemsInterface*, int16_t, int16_t)	16	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:343:10:void touchgfx::Drawable::setXY(int16_t, int16_t)	16	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:233:10:void touchgfx::Drawable::setPosition(int16_t, int16_t, int16_t, int16_t)	16	static
-../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Widget.hpp:36:7:touchgfx::Widget::Widget()	0	static
-../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Box.hpp:33:5:touchgfx::Box::Box()	8	static
-C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:9:1:Screen3ViewBase::Screen3ViewBase()	88	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Box.hpp:33:5:touchgfx::Box::Box()	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/generated/gui_generated/src/screen3_screen/Screen3ViewBase.cpp:9:1:Screen3ViewBase::Screen3ViewBase()	96	static

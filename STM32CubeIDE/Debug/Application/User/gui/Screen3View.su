@@ -1,10 +1,15 @@
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:144:18:virtual void touchgfx::Screen::handleTickEvent()	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:154:18:virtual void touchgfx::Screen::handleKeyEvent(uint8_t)	0	static
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:14:6:virtual void Screen3View::tearDownScreen()	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:16:6:virtual void Screen3View::tearDownScreen()	0	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:357:8:touchgfx::Callback<Screen3View, const touchgfx::AbstractButton&>::~Callback()	0	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:386:18:void touchgfx::Callback<dest_type, T1, void, void>::execute(T1) [with dest_type = Screen3View; T1 = const touchgfx::AbstractButton&]	8	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:396:18:bool touchgfx::Callback<dest_type, T1, void, void>::isValid() const [with dest_type = Screen3View; T1 = const touchgfx::AbstractButton&]	0	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:357:8:virtual touchgfx::Callback<Screen3View, const touchgfx::AbstractButton&>::~Callback()	8	static
 ../../TouchGFX/gui/include/gui/screen3_screen/Screen3View.hpp:11:13:Screen3View::~Screen3View()	8	static
 ../../TouchGFX/gui/include/gui/screen3_screen/Screen3View.hpp:11:13:virtual Screen3View::~Screen3View()	8	static
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:26:6:virtual void Screen3View::scrollListAnt2UpdateItem(EpcListItem&, int16_t)	16	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:38:6:void Screen3View::clearButtonClicked(const touchgfx::AbstractButton&)	0	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:28:6:virtual void Screen3View::scrollListAnt2UpdateItem(EpcListItem&, int16_t)	24	static
 C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:3:1:Screen3View::Screen3View()	8	static
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:19:6:void Screen3View::updateAnt2List()	8	static
-C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:8:6:virtual void Screen3View::setupScreen()	8	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:21:6:void Screen3View::updateAnt2List()	8	static
+C:/TouchGFXProjects/ethernet/TouchGFX/gui/src/screen3_screen/Screen3View.cpp:9:6:virtual void Screen3View::setupScreen()	8	static

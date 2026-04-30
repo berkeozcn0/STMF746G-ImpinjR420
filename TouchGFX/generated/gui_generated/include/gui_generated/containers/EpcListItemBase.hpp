@@ -25,6 +25,8 @@ protected:
      */
     touchgfx::TextAreaWithOneWildcard textEpc;
     touchgfx::TextAreaWithOneWildcard textRssi;
+    touchgfx::TextAreaWithOneWildcard textPhase;
+    touchgfx::TextAreaWithOneWildcard textCount;
 
     /*
      * Wildcard Buffers
@@ -33,6 +35,10 @@ protected:
     touchgfx::Unicode::UnicodeChar textEpcBuffer[TEXTEPC_SIZE];
     static const uint16_t TEXTRSSI_SIZE = 16;
     touchgfx::Unicode::UnicodeChar textRssiBuffer[TEXTRSSI_SIZE];
+    static const uint16_t TEXTPHASE_SIZE = 16;
+    touchgfx::Unicode::UnicodeChar textPhaseBuffer[TEXTPHASE_SIZE];
+    static const uint16_t TEXTCOUNT_SIZE = 16;
+    touchgfx::Unicode::UnicodeChar textCountBuffer[TEXTCOUNT_SIZE];
 
 private:
 

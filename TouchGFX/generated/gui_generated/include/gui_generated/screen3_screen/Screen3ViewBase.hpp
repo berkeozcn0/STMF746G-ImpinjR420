@@ -9,9 +9,9 @@
 #include <gui/screen3_screen/Screen3Presenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
-#include <touchgfx/widgets/Button.hpp>
 #include <touchgfx/containers/scrollers/ScrollList.hpp>
 #include <gui/containers/EpcListItem.hpp>
+#include <touchgfx/widgets/ButtonWithIcon.hpp>
 
 class Screen3ViewBase : public touchgfx::View<Screen3Presenter>
 {
@@ -36,9 +36,10 @@ protected:
     touchgfx::Box __background;
     touchgfx::Box box1;
     touchgfx::TextArea textArea1;
-    touchgfx::Button button1;
     touchgfx::ScrollList scrollListAnt2;
     touchgfx::DrawableListItems<EpcListItem, 8> scrollListAnt2ListItems;
+    touchgfx::ButtonWithIcon onClearButtonClicked;
+    touchgfx::ButtonWithIcon buttonWithIcon1;
 
 private:
 

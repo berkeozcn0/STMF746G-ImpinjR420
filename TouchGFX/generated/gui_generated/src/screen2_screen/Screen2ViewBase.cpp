@@ -25,7 +25,7 @@ Screen2ViewBase::Screen2ViewBase() :
     textArea1.setTypedText(touchgfx::TypedText(T___SINGLEUSE_SPHK));
     add(textArea1);
 
-    scrollListAnt1.setPosition(41, 39, 400, 181);
+    scrollListAnt1.setPosition(0, 38, 481, 181);
     scrollListAnt1.setHorizontal(false);
     scrollListAnt1.setCircular(false);
     scrollListAnt1.setEasingEquation(touchgfx::EasingEquations::backEaseOut);
@@ -39,20 +39,25 @@ Screen2ViewBase::Screen2ViewBase() :
     scrollListAnt1.setDrawables(scrollListAnt1ListItems, updateItemCallback);
     add(scrollListAnt1);
 
-    button1.setXY(380, 236);
-    button1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID));
-    button1.setAction(buttonCallback);
-    add(button1);
+    onClearButtonClicked.setXY(109, 236);
+    onClearButtonClicked.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTION_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_REFRESH_40_40_E8F6FB_SVG_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_DONE_40_40_E8F6FB_SVG_ID));
+    onClearButtonClicked.setIconXY(29, -1);
+    add(onClearButtonClicked);
 
-    button2.setXY(0, 236);
-    button2.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID));
-    button2.setAction(buttonCallback);
-    add(button2);
+    image1.setXY(184, 78);
+    add(image1);
 
-    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_OKISARETI_ID));
-    scalableImage1.setPosition(400, 243, 60, 23);
-    scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
-    add(scalableImage1);
+    buttonWithIcon1.setXY(0, 236);
+    buttonWithIcon1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_ARROW_BACK_IOS_40_40_FC0800_SVG_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_DONE_40_40_E8F6FB_SVG_ID));
+    buttonWithIcon1.setIconXY(30, -2);
+    buttonWithIcon1.setAction(buttonCallback);
+    add(buttonWithIcon1);
+
+    buttonWithIcon1_1.setXY(380, 236);
+    buttonWithIcon1_1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_ARROW_FORWARD_IOS_40_40_FC0800_SVG_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_DONE_40_40_E8F6FB_SVG_ID));
+    buttonWithIcon1_1.setIconXY(30, -2);
+    buttonWithIcon1_1.setAction(buttonCallback);
+    add(buttonWithIcon1_1);
 }
 
 Screen2ViewBase::~Screen2ViewBase()
@@ -71,17 +76,17 @@ void Screen2ViewBase::setupScreen()
 
 void Screen2ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    if (&src == &button1)
+    if (&src == &buttonWithIcon1_1)
     {
         //Interaction1
-        //When button1 clicked change screen to Screen3
+        //When buttonWithIcon1_1 clicked change screen to Screen3
         //Go to Screen3 with screen transition towards East
         application().gotoScreen3ScreenSlideTransitionEast();
     }
-    if (&src == &button2)
+    if (&src == &buttonWithIcon1)
     {
         //Interaction2
-        //When button2 clicked change screen to Screen1
+        //When buttonWithIcon1 clicked change screen to Screen1
         //Go to Screen1 with screen transition towards West
         application().gotoScreen1ScreenSlideTransitionWest();
     }

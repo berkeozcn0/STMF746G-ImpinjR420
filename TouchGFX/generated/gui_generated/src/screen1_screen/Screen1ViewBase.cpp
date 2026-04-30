@@ -109,15 +109,11 @@ Screen1ViewBase::Screen1ViewBase() :
     taBtnStop.setTypedText(touchgfx::TypedText(T___SINGLEUSE_9C06));
     add(taBtnStop);
 
-    button1.setXY(380, 177);
-    button1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID));
-    button1.setAction(buttonCallback);
-    add(button1);
-
-    scalableImage1.setBitmap(touchgfx::Bitmap(BITMAP_OKISARETI_ID));
-    scalableImage1.setPosition(401, 185, 58, 21);
-    scalableImage1.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
-    add(scalableImage1);
+    buttonWithIcon1.setXY(378, 177);
+    buttonWithIcon1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_ACTIVE_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_36_TINY_ROUND_PRESSED_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_NAVIGATION_ARROW_FORWARD_IOS_40_40_B52121_SVG_ID), touchgfx::Bitmap(BITMAP_ICON_THEME_IMAGES_ACTION_DONE_40_40_E8F6FB_SVG_ID));
+    buttonWithIcon1.setIconXY(30, -2);
+    buttonWithIcon1.setAction(buttonCallback);
+    add(buttonWithIcon1);
 }
 
 Screen1ViewBase::~Screen1ViewBase()
@@ -132,10 +128,10 @@ void Screen1ViewBase::setupScreen()
 
 void Screen1ViewBase::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    if (&src == &button1)
+    if (&src == &buttonWithIcon1)
     {
         //Interaction1
-        //When button1 clicked change screen to Screen2
+        //When buttonWithIcon1 clicked change screen to Screen2
         //Go to Screen2 with screen transition towards East
         application().gotoScreen2ScreenSlideTransitionEast();
     }

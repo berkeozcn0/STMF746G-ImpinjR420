@@ -15,7 +15,7 @@ struct EpcData {
     char    hexString[60];
     uint8_t antennaId;
     int8_t  peakRssi;
-    uint8_t _pad[2];
+    uint16_t phaseAngle;
 };
 
 /* Must match C-side StatusMsg exactly (64 bytes) */
@@ -44,6 +44,8 @@ void Model::tick()
                     if (strcmp(ant2List[i].epc, epc.hexString) == 0)
                     {
                         found = true;
+                        ant2List[i].seenCount++; // Increment count
+                        ant2List[i].phaseAngle = epc.phaseAngle; // Update phase
                         if (epc.peakRssi > ant2List[i].maxRssi)
                             ant2List[i].maxRssi = epc.peakRssi;
                         break;
@@ -54,6 +56,8 @@ void Model::tick()
                 {
                     strncpy(ant2List[ant2Count].epc, epc.hexString, sizeof(ant2List[ant2Count].epc));
                     ant2List[ant2Count].maxRssi = epc.peakRssi;
+                    ant2List[ant2Count].seenCount = 1;
+                    ant2List[ant2Count].phaseAngle = epc.phaseAngle;
                     ant2Count++;
                 }
 
@@ -86,6 +90,8 @@ void Model::tick()
                     if (strcmp(ant1List[i].epc, epc.hexString) == 0)
                     {
                         found = true;
+                        ant1List[i].seenCount++; // Increment count
+                        ant1List[i].phaseAngle = epc.phaseAngle; // Update phase
                         if (epc.peakRssi > ant1List[i].maxRssi)
                             ant1List[i].maxRssi = epc.peakRssi;
                         break;
@@ -96,6 +102,8 @@ void Model::tick()
                 {
                     strncpy(ant1List[ant1Count].epc, epc.hexString, sizeof(ant1List[ant1Count].epc));
                     ant1List[ant1Count].maxRssi = epc.peakRssi;
+                    ant1List[ant1Count].seenCount = 1;
+                    ant1List[ant1Count].phaseAngle = epc.phaseAngle;
                     ant1Count++;
                 }
 
@@ -134,4 +142,18 @@ void Model::sendCommand(unsigned char cmd)
 {
     if (cmdQueueHandle != NULL)
         osMessageQueuePut(cmdQueueHandle, &cmd, 0, 0);
+}
+
+void Model::clearAnt1List()
+{
+    ant1Count = 0;
+    if (modelListener != 0)
+        modelListener->updateAnt1List();
+}
+
+void Model::clearAnt2List()
+{
+    ant2Count = 0;
+    if (modelListener != 0)
+        modelListener->updateAnt2List();
 }

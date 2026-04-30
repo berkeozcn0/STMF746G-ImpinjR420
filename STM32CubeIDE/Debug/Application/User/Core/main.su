@@ -1,7 +1,7 @@
-C:/TouchGFXProjects/ethernet/Core/Src/main.c:768:6:StartDefaultTask	8	static,ignoring_inline_asm
-C:/TouchGFXProjects/ethernet/Core/Src/main.c:253:6:SystemClock_Config	88	static
-C:/TouchGFXProjects/ethernet/Core/Src/main.c:698:6:GetManufacturerId	72	static
-C:/TouchGFXProjects/ethernet/Core/Src/main.c:728:6:EnableMemoryMappedMode	72	static
+C:/TouchGFXProjects/ethernet/Core/Src/main.c:741:6:StartDefaultTask	8	static,ignoring_inline_asm
+C:/TouchGFXProjects/ethernet/Core/Src/main.c:254:6:SystemClock_Config	88	static
+C:/TouchGFXProjects/ethernet/Core/Src/main.c:672:6:GetManufacturerId	72	static
+C:/TouchGFXProjects/ethernet/Core/Src/main.c:701:6:EnableMemoryMappedMode	72	static
 C:/TouchGFXProjects/ethernet/Core/Src/main.c:143:5:main	120	static,ignoring_inline_asm
-C:/TouchGFXProjects/ethernet/Core/Src/main.c:861:6:HAL_TIM_PeriodElapsedCallback	0	static
-C:/TouchGFXProjects/ethernet/Core/Src/main.c:879:6:Error_Handler	0	static
+C:/TouchGFXProjects/ethernet/Core/Src/main.c:830:6:HAL_TIM_PeriodElapsedCallback	0	static
+C:/TouchGFXProjects/ethernet/Core/Src/main.c:846:6:Error_Handler	0	static

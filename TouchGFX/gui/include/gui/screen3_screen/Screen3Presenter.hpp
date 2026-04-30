@@ -28,6 +28,7 @@ public:
     virtual void updateAnt2List() override;
     const Ant1EpcRecord* getAnt2EpcList() const;
     uint8_t getAnt2EpcCount() const;
+    void clearList();
 
     virtual ~Screen3Presenter() {}
 

@@ -31,3 +31,8 @@ uint8_t Screen3Presenter::getAnt2EpcCount() const
 {
     return model->getAnt2EpcCount();
 }
+
+void Screen3Presenter::clearList()
+{
+    model->clearAnt2List();
+}

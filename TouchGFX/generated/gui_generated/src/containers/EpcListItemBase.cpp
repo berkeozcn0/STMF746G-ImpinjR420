@@ -7,7 +7,7 @@
 
 EpcListItemBase::EpcListItemBase()
 {
-    setWidth(400);
+    setWidth(481);
     setHeight(30);
     textEpc.setXY(0, 6);
     textEpc.setColor(touchgfx::Color::getColorFromRGB(30, 255, 0));
@@ -18,7 +18,7 @@ EpcListItemBase::EpcListItemBase()
     textEpc.setTypedText(touchgfx::TypedText(T___SINGLEUSE_J4VJ));
     add(textEpc);
 
-    textRssi.setXY(304, 6);
+    textRssi.setXY(293, 6);
     textRssi.setColor(touchgfx::Color::getColorFromRGB(255, 0, 0));
     textRssi.setLinespacing(0);
     Unicode::snprintf(textRssiBuffer, TEXTRSSI_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_DBH2).getText());
@@ -26,6 +26,24 @@ EpcListItemBase::EpcListItemBase()
     textRssi.resizeToCurrentText();
     textRssi.setTypedText(touchgfx::TypedText(T___SINGLEUSE_BAAI));
     add(textRssi);
+
+    textPhase.setXY(361, 6);
+    textPhase.setColor(touchgfx::Color::getColorFromRGB(0, 26, 255));
+    textPhase.setLinespacing(0);
+    Unicode::snprintf(textPhaseBuffer, TEXTPHASE_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_EKB7).getText());
+    textPhase.setWildcard(textPhaseBuffer);
+    textPhase.resizeToCurrentText();
+    textPhase.setTypedText(touchgfx::TypedText(T___SINGLEUSE_FF45));
+    add(textPhase);
+
+    textCount.setXY(429, 6);
+    textCount.setColor(touchgfx::Color::getColorFromRGB(255, 217, 0));
+    textCount.setLinespacing(0);
+    Unicode::snprintf(textCountBuffer, TEXTCOUNT_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_JKBA).getText());
+    textCount.setWildcard(textCountBuffer);
+    textCount.resizeToCurrentText();
+    textCount.setTypedText(touchgfx::TypedText(T___SINGLEUSE_Y60D));
+    add(textCount);
 }
 
 EpcListItemBase::~EpcListItemBase()
